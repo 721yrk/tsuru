@@ -31,9 +31,10 @@ interface WeekViewProps {
     staff: Staff[]
     bookings: Booking[]
     members: Member[]
+    serviceMenus: any[]
 }
 
-export function WeekView({ date, staff, bookings, members }: WeekViewProps) {
+export function WeekView({ date, staff, bookings, members, serviceMenus }: WeekViewProps) {
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedStaffId, setSelectedStaffId] = useState('')
     const [selectedTime, setSelectedTime] = useState<Date>(new Date())
@@ -139,6 +140,7 @@ export function WeekView({ date, staff, bookings, members }: WeekViewProps) {
                     staffName={selectedStaff.name}
                     startTime={selectedTime}
                     members={members}
+                    serviceMenus={serviceMenus}
                 />
             )}
         </div>

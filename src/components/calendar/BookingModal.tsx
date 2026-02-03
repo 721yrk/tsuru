@@ -21,6 +21,7 @@ interface BookingModalProps {
     staffName: string
     startTime: Date
     members: Array<{ id: string; name: string; rank: string }>
+    serviceMenus: Array<{ id: string; name: string; duration: number; price: number }>
 }
 
 export function BookingModal({
@@ -29,17 +30,27 @@ export function BookingModal({
     staffId,
     staffName,
     startTime,
-    members
+    members,
+    serviceMenus
 }: BookingModalProps) {
     const [selectedMemberId, setSelectedMemberId] = useState('')
-    const [duration, setDuration] = useState(60)
+    const [selectedMenuId, setSelectedMenuId] = useState('')
     const [notes, setNotes] = useState('')
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState('')
 
+    const selectedMenu = serviceMenus?.find(m => m.id === selectedMenuId)
+    const endTime = selectedMenu
+        ? new Date(startTime.getTime() + selectedMenu.duration * 60000)
+        : null
+
     const handleSubmit = async () => {
         if (!selectedMemberId) {
-            setError('メンバーを選択してください')
+            setError('顧客を選択してください')
+            return
+        }
+        if (!selectedMenuId) {
+            setError('メニューを選択してください')
             return
         }
 
@@ -47,20 +58,17 @@ export function BookingModal({
         setError('')
 
         try {
-            const endTime = new Date(startTime)
-            endTime.setMinutes(endTime.getMinutes() + duration)
-
             await createBooking({
                 memberId: selectedMemberId,
                 staffId,
+                serviceMenuId: selectedMenuId,
                 startTime,
-                endTime,
                 notes: notes || undefined
             })
 
             // Reset and close
             setSelectedMemberId('')
-            setDuration(60)
+            setSelectedMenuId('')
             setNotes('')
             onClose()
         } catch (err) {
@@ -74,35 +82,35 @@ export function BookingModal({
         <Dialog open={open} onOpenChange={onClose}>
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
-                    <DialogTitle>新規予約</DialogTitle>
+                    <DialogTitle>新規予約登録</DialogTitle>
                 </DialogHeader>
 
                 <div className="grid gap-4 py-4">
-                    {/* Staff (Auto-filled) */}
-                    <div>
-                        <Label className="text-sm font-bold text-slate-600">担当スタッフ</Label>
-                        <div className="mt-1 px-3 py-2 bg-slate-100 rounded text-sm">
-                            {staffName}
+                    {/* Staff & Time Info */}
+                    <div className="grid grid-cols-2 gap-4">
+                        <div>
+                            <Label className="text-xs font-bold text-slate-500">担当スタッフ</Label>
+                            <div className="mt-1 font-medium text-sm">
+                                {staffName}
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Start Time (Auto-filled) */}
-                    <div>
-                        <Label className="text-sm font-bold text-slate-600">開始時刻</Label>
-                        <div className="mt-1 px-3 py-2 bg-slate-100 rounded text-sm">
-                            {format(startTime, 'yyyy/MM/dd HH:mm')}
+                        <div>
+                            <Label className="text-xs font-bold text-slate-500">開始日時</Label>
+                            <div className="mt-1 font-medium text-sm">
+                                {format(startTime, 'yyyy/MM/dd HH:mm')}
+                            </div>
                         </div>
                     </div>
 
                     {/* Member Selection */}
                     <div>
-                        <Label className="text-sm font-bold text-slate-600">顧客</Label>
+                        <Label className="text-sm font-bold text-slate-700">顧客 <span className="text-red-500">*</span></Label>
                         <select
                             value={selectedMemberId}
                             onChange={(e) => setSelectedMemberId(e.target.value)}
-                            className="mt-1 w-full px-3 py-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="mt-1 w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
-                            <option value="">メンバーを選択してください</option>
+                            <option value="">顧客を選択してください</option>
                             {members.map(member => (
                                 <option key={member.id} value={member.id}>
                                     {member.name} ({member.rank})
@@ -111,37 +119,43 @@ export function BookingModal({
                         </select>
                     </div>
 
-                    {/* Duration */}
+                    {/* Service Menu Selection */}
                     <div>
-                        <Label className="text-sm font-bold text-slate-600">セッション時間</Label>
+                        <Label className="text-sm font-bold text-slate-700">メニュー <span className="text-red-500">*</span></Label>
                         <select
-                            value={duration}
-                            onChange={(e) => setDuration(Number(e.target.value))}
-                            className="mt-1 w-full px-3 py-2 border rounded text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            value={selectedMenuId}
+                            onChange={(e) => setSelectedMenuId(e.target.value)}
+                            className="mt-1 w-full px-3 py-2 border rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
                         >
-                            <option value={30}>30分</option>
-                            <option value={60}>60分</option>
-                            <option value={90}>90分</option>
-                            <option value={120}>120分</option>
+                            <option value="">メニューを選択してください</option>
+                            {serviceMenus?.map(menu => (
+                                <option key={menu.id} value={menu.id}>
+                                    {menu.name} ({menu.duration}分)
+                                </option>
+                            ))}
                         </select>
+                        {endTime && (
+                            <p className="text-xs text-slate-500 mt-1 text-right">
+                                終了予定: {format(endTime, 'HH:mm')}
+                            </p>
+                        )}
                     </div>
 
                     {/* Notes */}
                     <div>
-                        <Label className="text-sm font-bold text-slate-600">備考（任意）</Label>
+                        <Label className="text-sm font-bold text-slate-700">備考（任意）</Label>
                         <Textarea
                             value={notes}
                             onChange={(e) => setNotes(e.target.value)}
-                            placeholder="目的、要望など..."
-                            className="mt-1 min-h-[60px] text-sm"
-                            rows={2}
+                            placeholder="要望やメモなど"
+                            className="mt-1 min-h-[80px] text-sm"
                         />
                     </div>
 
                     {/* Error Message */}
                     {error && (
-                        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-2">
-                            {error}
+                        <div className="text-sm text-red-600 bg-red-50 border border-red-200 rounded p-3 flex items-start gap-2">
+                            ⚠️ <span>{error}</span>
                         </div>
                     )}
                 </div>
@@ -157,9 +171,9 @@ export function BookingModal({
                     <Button
                         onClick={handleSubmit}
                         disabled={loading}
-                        className="bg-green-600 hover:bg-green-700"
+                        className="bg-green-600 hover:bg-green-700 text-white"
                     >
-                        {loading ? '登録中...' : '予約確定'}
+                        {loading ? '処理中...' : '予約を確定する'}
                     </Button>
                 </DialogFooter>
             </DialogContent>

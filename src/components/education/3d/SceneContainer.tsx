@@ -40,8 +40,8 @@ export function SceneContainer({ simulationStep }: SceneContainerProps) {
                     <ContactShadows resolution={1024} scale={10} blur={1} opacity={0.5} far={1} color="#1e293b" />
 
                     {/* Post Processing for reliable medical look */}
-                    <EffectComposer disableNormalPass={false} multisampling={4}>
-                        <SSAO radius={0.1} intensity={15} luminanceInfluence={0.5} color="black" />
+                    <EffectComposer multisampling={4}>
+                        <SSAO radius={0.1} intensity={15} luminanceInfluence={0.5} />
                         <Bloom luminanceThreshold={0.9} mipmapBlur intensity={0.5} radius={0.5} />
                         <Vignette eskil={false} offset={0.1} darkness={0.5} />
                     </EffectComposer>

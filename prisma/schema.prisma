@@ -1,12 +1,13 @@
-// Kaloko Reconstruction - Database Schema
+// SHEEKA - Database Schema
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("POSTGRES_PRISMA_URL") // uses connection pooling
+  directUrl = env("POSTGRES_URL_NON_POOLING") // uses a direct connection
 }
 
 model User {
@@ -27,8 +28,18 @@ model User {
   assignedMembers  Member[]      @relation("MainTrainer")
   reservations     Reservation[]
   accounts         Account[]    // NextAuth relation
+  chats            ChatMessage[] // CRM: 1:1 Chat
+  tags             Tag[]         // CRM: User Tags
+  currentRichMenuId String?      // CRM: Current Rich Menu
+  richMenu         RichMenu?     @relation(fields: [currentRichMenuId], references: [id])
 
   @@map("users")
+
+  // Relations for CRM
+  attributeValues UserAttributeValue[]
+  formSubmissions FormSubmission[]
+  stepProgress    UserStepProgress[]
+  segments        UserSegment[]
 }
 
 model Account {
@@ -244,6 +255,7 @@ model Staff {
   type      String // "trainer" | "self-room"
   color     String   @default("#3b82f6")
   isActive  Boolean  @default(true)
+  maxConcurrentBookings Int @default(1) // NEW: Concurrent booking limit
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -284,12 +296,31 @@ model ShiftOverride {
   @@map("shift_overrides")
 }
 
+model ServiceMenu {
+  id          String   @id @default(cuid())
+  name        String
+  duration    Int      // Duration in minutes
+  price       Int      @default(0)
+  description String?
+  categoryId  String?  // Optional grouping
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings    Booking[]
+
+  @@map("service_menus")
+}
+
 model Booking {
   id            String   @id @default(cuid())
   memberId      String
   member        Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
   staffId       String
   staff         Staff    @relation(fields: [staffId], references: [id])
+  serviceMenuId String?  // NEW: Link to Service Menu
+  serviceMenu   ServiceMenu? @relation(fields: [serviceMenuId], references: [id])
+  
   startTime     DateTime
   endTime       DateTime
   status        String   @default("confirmed") // "pending" | "confirmed" | "cancelled"
@@ -303,4 +334,229 @@ model Booking {
   @@index([staffId, startTime])
   @@index([memberId])
   @@map("bookings")
+}
+
+// ===== CRM SYSTEM (L-Message Style) =====
+
+model RichMenu {
+  id        String   @id @default(cuid())
+  lineMenuId String  @unique // ID from LINE Platform
+  name      String   // Internal name
+  imageUrl  String?  // Storage URL for the menu image
+  chatBarText String @default("メニューを開く")
+  selected  Boolean  @default(false) // Default selection
+  jsonConfig Json    // Full JSON configuration for LINE API
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users     User[]
+  
+  @@map("rich_menus")
+}
+
+model Tag {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  color     String   @default("#94a3b8") // UI color definition
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users     User[]
+
+  @@map("tags")
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sender    String   // "USER" | "ADMIN"
+  content   String   // Text content (simplified for now)
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@map("chat_messages")
+}
+
+model AutoResponse {
+  id        String   @id @default(cuid())
+  keyword   String   @unique // Exact match for simplicity first
+  response  String   // Reply text
+  isActive  Boolean  @default(true)
+  matchType String   @default("EXACT") // "EXACT" | "PARTIAL" | "REGEX"
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("auto_responses")
+}
+
+// ===== MESSAGING SYSTEM =====
+
+model Broadcast {
+  id          String   @id @default(cuid())
+  title       String   // Internal use
+  content     Json     // LINE message object(s)
+  targetFilter Json?   // Segment rules or specific user IDs
+  scheduledAt DateTime?
+  status      String   @default("DRAFT") // DRAFT, SCHEDULED, SENDING, SENT, FAILED
+  sentCount   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("broadcasts")
+}
+
+model StepSequence {
+  id        String   @id @default(cuid())
+  name      String
+  triggerType String // "TAG_ADDED", "FRIEND_ADDED", "FORM_SUBMITTED"
+  triggerValue String? // Tag ID or Form ID
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  messages  StepMessage[]
+  progress  UserStepProgress[]
+
+  @@map("step_sequences")
+}
+
+model StepMessage {
+  id          String   @id @default(cuid())
+  sequenceId  String
+  sequence    StepSequence @relation(fields: [sequenceId], references: [id], onDelete: Cascade)
+  delayDays   Int      @default(0) // Days after trigger
+  timeOfDay   String?  // Specific time "10:00". If null, use relative delay
+  content     Json     // LINE message objects
+  orderIndex  Int
+  createdAt   DateTime @default(now())
+
+  @@map("step_messages")
+}
+
+model UserStepProgress {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  sequenceId  String
+  sequence    StepSequence @relation(fields: [sequenceId], references: [id], onDelete: Cascade)
+  
+  nextMessageOrder Int @default(0)
+  scheduledAt DateTime // When the next message should be sent
+  status      String   @default("ACTIVE") // ACTIVE, COMPLETED, CANCELLED
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([userId, sequenceId])
+  @@index([scheduledAt]) // For cron job
+  @@map("user_step_progress")
+}
+
+// ===== FORMS & SURVEYS =====
+
+model Form {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  isActive    Boolean  @default(true)
+  actions     Json?    // e.g., { "addTags": ["tag_id"], "startStep": "seq_id" }
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  questions   FormQuestion[]
+  submissions FormSubmission[]
+
+  @@map("forms")
+}
+
+model FormQuestion {
+  id          String   @id @default(cuid())
+  formId      String
+  form        Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  type        String   // "TEXT", "TEXTAREA", "SELECT", "RADIO", "CHECKBOX", "DATE"
+  label       String
+  options     Json?    // Array of strings for choices
+  required    Boolean  @default(false)
+  orderIndex  Int
+  
+  answers     FormAnswer[]
+
+  @@map("form_questions")
+}
+
+model FormSubmission {
+  id          String   @id @default(cuid())
+  formId      String
+  form        Form     @relation(fields: [formId], references: [id], onDelete: Cascade)
+  userId      String?  // Can be anonymous initially, but usually linked
+  user        User?    @relation(fields: [userId], references: [id])
+  createdAt   DateTime @default(now())
+
+  answers     FormAnswer[]
+
+  @@map("form_submissions")
+}
+
+model FormAnswer {
+  id           String   @id @default(cuid())
+  submissionId String
+  submission   FormSubmission @relation(fields: [submissionId], references: [id], onDelete: Cascade)
+  questionId   String
+  question     FormQuestion   @relation(fields: [questionId], references: [id])
+  value        String   // Text value or JSON string for multiple selection
+
+  @@map("form_answers")
+}
+
+// ===== CUSTOMER ATTRIBUTES & SEGMENTS =====
+
+model CustomAttribute {
+  id        String   @id @default(cuid())
+  key       String   @unique // Internal key e.g. "favorite_color"
+  label     String   // Display label e.g. "好きな色"
+  type      String   // "TEXT", "NUMBER", "DATE", "SELECT"
+  options   Json?    // Choices for SELECT
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  values    UserAttributeValue[]
+
+  @@map("custom_attributes")
+}
+
+model UserAttributeValue {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  attributeId String
+  attribute   CustomAttribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  value       String   // Store as string, cast when reading
+
+  @@unique([userId, attributeId])
+  @@map("user_attribute_values")
+}
+
+model Segment {
+  id          String   @id @default(cuid())
+  name        String
+  rules       Json     // Complex filtering logic
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       UserSegment[]
+
+  @@map("segments")
+}
+
+model UserSegment {
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  segmentId String
+  segment   Segment  @relation(fields: [segmentId], references: [id], onDelete: Cascade)
+  assignedAt DateTime @default(now())
+
+  @@id([userId, segmentId])
+  @@map("user_segments")
 }

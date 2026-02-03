@@ -1,4 +1,5 @@
 import { getStaffList, getBookingsForDate, getMembersList } from '@/app/actions/calendar_actions'
+import { prisma } from '@/lib/db'
 import { StaffGridCalendar } from '@/components/calendar/StaffGridCalendar'
 import { WeekView } from '@/components/calendar/WeekView'
 import { MonthView } from '@/components/calendar/MonthView'
@@ -68,9 +69,10 @@ export default async function CalendarPage({ searchParams }: PageProps) {
         bookings = allBookings.flat()
     }
 
-    const [staff, members] = await Promise.all([
+    const [staff, members, serviceMenus] = await Promise.all([
         getStaffList(),
-        getMembersList()
+        getMembersList(),
+        prisma.serviceMenu.findMany({ where: { isActive: true }, orderBy: { duration: 'asc' } })
     ])
 
     // Convert Date objects for client component
@@ -162,6 +164,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                                 staff={staff}
                                 bookings={bookingsWithDates}
                                 members={members}
+                                serviceMenus={serviceMenus}
                             />
                         </div>
                     )}
@@ -172,6 +175,7 @@ export default async function CalendarPage({ searchParams }: PageProps) {
                             staff={staff}
                             bookings={bookingsWithDates}
                             members={members}
+                            serviceMenus={serviceMenus}
                         />
                     )}
 

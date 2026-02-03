@@ -19,20 +19,69 @@ export async function POST(req: NextRequest) {
 
         await Promise.all(
             events.map(async (event) => {
+                const lineUserId = event.source.userId;
+                if (!lineUserId) return;
+
+                // 1. Handle Friend Add (Follow)
                 if (event.type === 'follow') {
-                    // Handle follow event
-                    const lineUserId = event.source.userId;
-                    if (lineUserId) {
-                        console.log(`New follower: ${lineUserId}`);
-                        // We can't automatically link here without more info, 
-                        // but we could send a welcome message asking to link account.
+                    console.log(`New follower: ${lineUserId}`);
+                    try {
+                        const profile = await client.getProfile(lineUserId);
+
+                        // Upsert user to capture 'friend' status
+                        await prisma.user.upsert({
+                            where: { lineUserId },
+                            update: {
+                                name: profile.displayName, // Update name if changed
+                                // We could update an 'isActive' flag here if we had one
+                            },
+                            create: {
+                                lineUserId,
+                                name: profile.displayName,
+                                email: `line_${lineUserId}@sheeka.local`, // Placeholder unique email
+                                passwordHash: '$2a$12$DummyHashForLineUser_______________________', // Unusable hash
+                                role: 'MEMBER',
+                                memberProfile: {
+                                    create: {
+                                        name: profile.displayName,
+                                        dateOfBirth: new Date(), // Dummy
+                                        gender: 'UNKNOWN',
+                                        phone: '',
+                                        emergencyContact: ''
+                                    }
+                                }
+                            }
+                        });
+
                         await client.replyMessage(event.replyToken, {
                             type: 'text',
-                            text: '友だち追加ありがとうございます！\n会員様はアプリからLINE連携を行ってください。'
+                            text: '友だち追加ありがとうございます！\nSHEEKA Wellnessへようこそ。'
                         });
+                    } catch (e) {
+                        console.error('Error handling follow event:', e);
                     }
                 }
-                // Handle other events like message if needed
+
+                // 2. Handle Text Message
+                if (event.type === 'message' && event.message.type === 'text') {
+                    try {
+                        // Find user first
+                        const user = await prisma.user.findUnique({ where: { lineUserId } });
+
+                        if (user) {
+                            // Store message
+                            await prisma.chatMessage.create({
+                                data: {
+                                    userId: user.id,
+                                    sender: 'USER',
+                                    content: event.message.text
+                                }
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error storing message:', e);
+                    }
+                }
             })
         );
 

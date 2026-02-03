@@ -31,6 +31,7 @@ interface StaffGridCalendarProps {
     staff: Staff[]
     bookings: Booking[]
     members: Member[]
+    serviceMenus: any[] // Using any for simplicity in props, ideally import ServiceMenu type
 }
 
 // Generate time slots from 10:00 to 22:00 in 15min intervals
@@ -44,7 +45,7 @@ function generateTimeSlots() {
     return slots
 }
 
-export function StaffGridCalendar({ date, staff, bookings, members }: StaffGridCalendarProps) {
+export function StaffGridCalendar({ date, staff, bookings, members, serviceMenus }: StaffGridCalendarProps) {
     const [modalOpen, setModalOpen] = useState(false)
     const [selectedStaffId, setSelectedStaffId] = useState('')
     const [selectedTime, setSelectedTime] = useState<Date>(new Date())
@@ -216,6 +217,7 @@ export function StaffGridCalendar({ date, staff, bookings, members }: StaffGridC
                     staffName={selectedStaff.name}
                     startTime={selectedTime}
                     members={members}
+                    serviceMenus={serviceMenus}
                 />
             )}
 

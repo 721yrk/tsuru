@@ -9,6 +9,8 @@ import { Save, Building2, Users } from "lucide-react"
 import { StaffEditModal } from "@/components/settings/StaffEditModal"
 import { ExerciseManager } from "@/components/settings/ExerciseManager"
 import { PlanSettings } from "@/components/settings/PlanSettings"
+import { ServiceMenuManager } from "@/components/settings/ServiceMenuManager" // NEW
+import { ShiftManager } from "@/components/settings/ShiftManager" // NEW
 
 export const dynamic = "force-dynamic"
 import { LineLinkButton } from "@/components/settings/LineLinkButton"
@@ -22,6 +24,36 @@ export default async function SettingsPage() {
     const users = await prisma.user.findMany({
         where: { role: 'TRAINER' },
         orderBy: { createdAt: 'asc' }
+    })
+
+    // Fetch Service Menus
+    const serviceMenus = await prisma.serviceMenu.findMany({
+        orderBy: { createdAt: 'desc' }
+    })
+
+    // Fetch Staff for Shifts (We need to query the 'Staff' model separate from 'User' model now)
+    // Or did we link them? Currently 'Staff' is a separate model in the schema designed for Booking System
+    // User role='TRAINER' is for authentication. Staff model is for Booking.
+    // Ideally they should synced. For now, let's fetch from 'Staff' model if it exists, or create one if empty?
+    // Wait, the schema has `Staff` model separate from `User`. 
+    // We should probably use `Staff` model for the ShiftManager.
+
+    // Check if Staff exist, if not create from Trainers? 
+    // For this MVP step, let's just fetch Staff.
+    const bookingStaff = await prisma.staff.findMany({
+        include: { shifts: true }
+    })
+
+    // Map for ShiftManager
+    const staffListForShifts = bookingStaff.map(s => ({
+        id: s.id,
+        name: s.name,
+        maxConcurrentBookings: s.maxConcurrentBookings
+    }))
+
+    const shiftsMap: Record<string, any[]> = {}
+    bookingStaff.forEach(s => {
+        shiftsMap[s.id] = s.shifts
     })
 
     // Fetch Master Exercises
@@ -55,9 +87,11 @@ export default async function SettingsPage() {
             </div>
 
             <Tabs defaultValue="store" className="w-full">
-                <TabsList className="grid w-full grid-cols-4 md:w-[600px]">
+                <TabsList className="grid w-full grid-cols-6 md:w-[900px]">
                     <TabsTrigger value="store">店舗情報</TabsTrigger>
                     <TabsTrigger value="staff">スタッフ</TabsTrigger>
+                    <TabsTrigger value="menus">予約メニュー</TabsTrigger>
+                    <TabsTrigger value="shifts">シフト設定</TabsTrigger>
                     <TabsTrigger value="exercises">種目管理</TabsTrigger>
                     <TabsTrigger value="plans">プラン</TabsTrigger>
                 </TabsList>
@@ -141,6 +175,17 @@ export default async function SettingsPage() {
                             <Button className="w-full" variant="outline">+ スタッフを追加</Button>
                         </CardFooter>
                     </Card>
+                </TabsContent>
+
+                <TabsContent value="menus" className="mt-6">
+                    <ServiceMenuManager initialMenus={serviceMenus} />
+                </TabsContent>
+
+                <TabsContent value="shifts" className="mt-6">
+                    <ShiftManager
+                        staffList={staffListForShifts}
+                        initialShifts={shiftsMap}
+                    />
                 </TabsContent>
 
                 <TabsContent value="exercises" className="mt-6">

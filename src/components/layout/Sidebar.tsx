@@ -12,7 +12,8 @@ import {
     Settings,
     Leaf,
     MessageCircle,
-    BookOpen
+    BookOpen,
+    BarChart3
 } from "lucide-react"
 
 const routes = [
@@ -32,20 +33,29 @@ const routes = [
         href: "/dashboard/members",
     },
     {
-        label: "LINEメッセージ",
+        label: "1:1チャット",
         icon: MessageCircle,
-        href: "/dashboard/messages",
+        href: "/dashboard/crm/chats",
     },
     {
-        label: "AI自動カルテ",
-        icon: Mic,
-        href: "/dashboard/ai-record",
+        label: "リッチメニュー",
+        icon: MessageCircle, // Or usage of another icon like Menu
+        href: "/dashboard/crm/rich-menus",
     },
     {
-        label: "説明ツール",
+        label: "メッセージ",
+        icon: MessageCircle, // Use distinct icon if available, e.g. Send
+        href: "/dashboard/crm/messages",
+    },
+    {
+        label: "情報管理",
         icon: BookOpen,
-        href: "/dashboard/education",
-        color: "text-orange-500",
+        href: "/dashboard/info",
+    },
+    {
+        label: "売上表",
+        icon: BarChart3,
+        href: "/dashboard/sales",
     },
     {
         label: "設定",

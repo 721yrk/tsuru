@@ -1,0 +1,306 @@
+// Kaloko Reconstruction - Database Schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String
+  passwordHash String
+  role         String   @default("MEMBER")
+  title        String? // Wellness Coach, etc.
+  lineUserId   String?  @unique // LINE User ID for messaging and login
+  unitPrice    Int? // 6050, etc.
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  memberProfile    Member?       @relation("UserAsMember")
+  trainingSessions TrainingLog[] @relation("TrainerSessions")
+  assignedPromises Promise[]     @relation("AssignedByTrainer")
+  assignedMembers  Member[]      @relation("MainTrainer")
+  reservations     Reservation[]
+  accounts         Account[]    // NextAuth relation
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Member {
+  id               String   @id @default(cuid())
+  userId           String?  @unique
+  name             String
+  dateOfBirth      DateTime
+  gender           String
+  phone            String
+  emergencyContact String
+
+  // Profile & Vision
+  medicalHistory   String?
+  exerciseHistory  String? // NEW
+  height           Float? // NEW: Height in cm
+  currentCondition String? // NEW: Current injuries/illness
+  goals            String?
+  purpose          String? // NEW
+  vision           String? // NEW
+
+  experienceLevel    String   @default("BEGINNER")
+  joinDate           DateTime @default(now())
+  isActive           Boolean  @default(true)
+  rank               String   @default("REGULAR") // BRONZE, SILVER, GOLD, PLATINUM
+  plan               String   @default("STANDARD") // STANDARD, EMPLOYEES, VIP
+  manualDiscountRate Int? // Optional manual override for discount percentage
+  contractedSessions Int      @default(4) // Number of sessions included in monthly contract
+  mainTrainerId      String? // ID of the designated main trainer
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+
+  user             User?             @relation("UserAsMember", fields: [userId], references: [id])
+  mainTrainer      User?             @relation("MainTrainer", fields: [mainTrainerId], references: [id])
+  trainingLogs     TrainingLog[]
+  lifeLogs         LifeLog[]
+  conditioningLogs ConditioningLog[] // NEW
+
+  promises     Promise[]
+  reservations Reservation[]
+  bodyRecords  BodyRecord[]
+  bookings     Booking[] // NEW: For booking calendar system
+
+  @@map("members")
+}
+
+model ConditioningLog {
+  id         String   @id @default(cuid())
+  memberId   String
+  date       DateTime @default(now())
+  stiffness  String? // 硬い部位
+  weakness   String? // 弱い部位
+  adjustment String? // 調整箇所
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("conditioning_logs")
+}
+
+model BodyRecord {
+  id        String   @id @default(cuid())
+  memberId  String
+  date      DateTime
+  photoUrl  String // URL to storage (or base64 for demo)
+  weight    Float?
+  notes     String?
+  createdAt DateTime @default(now())
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("body_records")
+}
+
+model TrainingLog {
+  id              String   @id @default(cuid())
+  memberId        String
+  trainerId       String?
+  trainingDate    DateTime
+  durationMinutes Int
+  notes           String?
+  transcript      String? // AI Speech-to-Text
+  aiSummary       String? // AI Generated Summary
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  member  Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  trainer User?         @relation("TrainerSessions", fields: [trainerId], references: [id])
+  sets    TrainingSet[]
+
+  @@map("training_logs")
+}
+
+model TrainingSet {
+  id                 String   @id @default(cuid())
+  trainingLogId      String
+  exerciseName       String
+  setNumber          Int
+  weight             Float
+  reps               Int
+  restSeconds        Int? // Rest time after set
+  estimatedOneRepMax Float?
+  notes              String?
+  createdAt          DateTime @default(now())
+
+  trainingLog TrainingLog @relation(fields: [trainingLogId], references: [id], onDelete: Cascade)
+
+  @@map("training_sets")
+}
+
+model LifeLog {
+  id           String   @id @default(cuid())
+  memberId     String
+  logDate      DateTime
+  steps        Int?
+  weight       Float?
+  sleepMinutes Int?
+  mood         String?
+  notes        String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([memberId, logDate])
+  @@map("life_logs")
+}
+
+model Promise {
+  id          String   @id @default(cuid())
+  memberId    String
+  assignedBy  String
+  title       String
+  description String?
+  dueDate     DateTime
+  status      String   @default("PENDING")
+  category    String   @default("OTHER")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  member      Member              @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  trainer     User                @relation("AssignedByTrainer", fields: [assignedBy], references: [id])
+  completions PromiseCompletion[]
+
+  @@map("promises")
+}
+
+model PromiseCompletion {
+  id            String   @id @default(cuid())
+  promiseId     String
+  completedDate DateTime
+  note          String?
+  createdAt     DateTime @default(now())
+
+  promise Promise @relation(fields: [promiseId], references: [id], onDelete: Cascade)
+
+  @@map("promise_completions")
+}
+
+model Reservation {
+  id        String   @id @default(cuid())
+  memberId  String
+  trainerId String
+  startTime DateTime
+  endTime   DateTime
+  status    String   @default("CONFIRMED")
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  member  Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  trainer User   @relation(fields: [trainerId], references: [id])
+
+  @@map("reservations")
+}
+
+model MasterExercise {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  category  String // Chest, Back, Legs, Shoulders, Arms, Abs, Other
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("master_exercises")
+}
+
+// ===== BOOKING CALENDAR SYSTEM =====
+
+model Staff {
+  id        String   @id @default(cuid())
+  name      String
+  type      String // "trainer" | "self-room"
+  color     String   @default("#3b82f6")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  shifts         Shift[]
+  shiftOverrides ShiftOverride[]
+  bookings       Booking[]
+
+  @@map("staff")
+}
+
+model Shift {
+  id        String   @id @default(cuid())
+  staffId   String
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  dayOfWeek Int // 0=Sunday, 1=Monday, ..., 6=Saturday
+  startTime String // "09:00" format
+  endTime   String // "18:00" format
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([staffId, dayOfWeek])
+  @@map("shifts")
+}
+
+model ShiftOverride {
+  id        String   @id @default(cuid())
+  staffId   String
+  staff     Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  date      DateTime // Specific date for override
+  startTime String? // null = day off
+  endTime   String? // null = day off
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([staffId, date])
+  @@map("shift_overrides")
+}
+
+model Booking {
+  id            String   @id @default(cuid())
+  memberId      String
+  member        Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  staffId       String
+  staff         Staff    @relation(fields: [staffId], references: [id])
+  startTime     DateTime
+  endTime       DateTime
+  status        String   @default("confirmed") // "pending" | "confirmed" | "cancelled"
+  googleEventId String? // Google Calendar event ID for sync
+  type          String   @default("REGULAR") // REGULAR, ADDITIONAL, TRANSFER_MEMBER, TRANSFER_STORE, TRIAL
+  cancellationReason String? // "SICKNESS" | "BEREAVEMENT" | "REST" | "OTHER" | "NORMAL"
+  notes         String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([staffId, startTime])
+  @@index([memberId])
+  @@map("bookings")
+}

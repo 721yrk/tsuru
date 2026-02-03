@@ -1,0 +1,53 @@
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+@layer base {
+  :root {
+    /* Botanical Modern Palette */
+    /* Background: Soft Off-White */
+    --background: 210 20% 98%;
+    --foreground: 220 10% 20%;
+    /* Charcoal Gray */
+
+    /* Card: Pure White */
+    --card: 0 0% 100%;
+    --card-foreground: 220 10% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 10% 20%;
+
+    /* Primary: Clover Green (#4CAF50 -> 122 39% 49%) */
+    --primary: 122 39% 49%;
+    --primary-foreground: 0 0% 100%;
+
+    /* Secondary: Soft Sage/Gray */
+    --secondary: 130 10% 94%;
+    --secondary-foreground: 122 39% 49%;
+
+    --muted: 210 10% 96%;
+    --muted-foreground: 215 10% 55%;
+
+    --accent: 130 20% 96%;
+    --accent-foreground: 122 39% 49%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 220 10% 90%;
+    --input: 220 10% 90%;
+    --ring: 122 39% 49%;
+
+    --radius: 0.75rem;
+    /* Slightly more rounded */
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}

@@ -16,3 +16,22 @@ export async function getGlobalUnreadCount() {
         return { count: 0 }
     }
 }
+
+export async function markMessagesAsRead(userId: string) {
+    try {
+        await prisma.chatMessage.updateMany({
+            where: {
+                userId: userId,
+                sender: 'USER',
+                isRead: false
+            },
+            data: {
+                isRead: true
+            }
+        })
+        return { success: true }
+    } catch (error) {
+        console.error('Error marking messages as read:', error)
+        return { success: false }
+    }
+}

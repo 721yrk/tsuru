@@ -25,27 +25,27 @@ export async function updateMemberProfile(formData: FormData) {
         // Usually 'User' has 'Member' relation one-to-one via 'UserAsMember'.
         // Let's find the member record first.
 
-        const existingMember = await prisma.member.findUnique({
-            where: { userId }
+        // Create or Update Member Profile
+        await prisma.member.upsert({
+            where: { userId: userId },
+            update: {
+                name,
+                kana,
+                gender,
+                dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
+                joinDate: joinDate ? new Date(joinDate) : undefined,
+            },
+            create: {
+                userId,
+                name,
+                kana,
+                gender: gender || 'UNKNOWN',
+                dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : new Date(),
+                joinDate: joinDate ? new Date(joinDate) : new Date(),
+                phone: '', // Required field fallback
+                emergencyContact: '', // Required field fallback
+            }
         })
-
-        if (existingMember) {
-            await prisma.member.update({
-                where: { id: existingMember.id },
-                data: {
-                    name, // Sync name
-                    kana,
-                    gender,
-                    dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
-                    joinDate: joinDate ? new Date(joinDate) : undefined,
-                }
-            })
-        } else {
-            // Create if missing (unlikely given app structure but safe fallback)
-            // But creating requires other fields. Assuming it exists for now based on 'MemberDetailPage'
-            console.error("Member profile not found for user: " + userId)
-            return { error: 'Member profile not found' }
-        }
 
         revalidatePath(`/dashboard/crm/members/${userId}`)
         return { success: true }

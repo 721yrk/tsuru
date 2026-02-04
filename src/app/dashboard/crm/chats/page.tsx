@@ -84,7 +84,7 @@ export default async function ChatListPage() {
                         </div>
                     )}
                     {users.map(user => (
-                        <Link key={user.id} href={`/dashboard/crm/members/${user.id}`} className="block hover:bg-slate-50 transition-colors">
+                        <Link key={user.id} href={`/dashboard/crm/chats/${user.id}`} className="block hover:bg-slate-50 transition-colors">
                             <div className="p-4 flex gap-3 border-b border-slate-50">
                                 <Avatar className="w-10 h-10">
                                     <AvatarFallback>{user.name[0]}</AvatarFallback>

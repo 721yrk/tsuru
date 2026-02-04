@@ -6,19 +6,61 @@ import Link from "next/link"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 
 async function getChatUsers() {
-    // Logic to find users with chat history or all connected users
-    // For now, list recent active users
-    const users = await prisma.user.findMany({
-        where: { lineUserId: { not: null } },
+    // 1. Get users who have messages, ordered by most recent message
+    const recentMessages = await prisma.chatMessage.findMany({
+        orderBy: { createdAt: 'desc' },
+        distinct: ['userId'],
+        select: { userId: true },
+        take: 20
+    });
+
+    const recentUserIds = recentMessages.map(m => m.userId);
+
+    // 2. Fetch those users
+    const activeUsers = await prisma.user.findMany({
+        where: { id: { in: recentUserIds } },
         include: {
             chats: {
                 orderBy: { createdAt: 'desc' },
                 take: 1
             }
-        },
-        take: 20
-    })
-    return users
+        }
+    });
+
+    // 3. Sort activeUsers manually to match the message order (findMany doesn't guarantee order of 'in' array)
+    // Map userId -> User object
+    const userMap = new Map(activeUsers.map(u => [u.id, u]));
+    const sortedActiveUsers = recentUserIds.map(id => userMap.get(id)).filter(u => u !== undefined) as typeof activeUsers;
+
+    // 4. Optionally append other LINE users who haven't messaged yet (if we want to show everyone)
+    // For now, let's just also include recent LINE users who might not have messages?
+    // User requested "If message comes, show it". The above logic covers that.
+    // But they might also want to see friends to START a chat.
+
+    // Let's get ALL line friends if the list is small, or just combine.
+    // Given the request "Show in list", usually means "Active Chats". 
+    // If they want to start a chat, they can go to "Member List".
+    // But let's add up to 10 more recent LINE users who aren't in the active list just in case.
+
+    if (sortedActiveUsers.length < 10) {
+        const otherUsers = await prisma.user.findMany({
+            where: {
+                lineUserId: { not: null },
+                id: { notIn: recentUserIds }
+            },
+            include: {
+                chats: {
+                    orderBy: { createdAt: 'desc' },
+                    take: 1
+                }
+            },
+            orderBy: { createdAt: 'desc' },
+            take: 10
+        });
+        return [...sortedActiveUsers, ...otherUsers];
+    }
+
+    return sortedActiveUsers;
 }
 
 export default async function ChatListPage() {

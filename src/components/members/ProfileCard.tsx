@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { User, Edit2, Save, X } from "lucide-react"
 import { updateMemberProfile } from "@/app/actions/members_actions"
 import { differenceInYears, format } from "date-fns"
+import ProfileEditModal from "@/components/crm/ProfileEditModal"
 
 export function ProfileCard({ member }: { member: any }) {
     const [isEditing, setIsEditing] = useState(false)
@@ -50,16 +51,19 @@ export function ProfileCard({ member }: { member: any }) {
                     <User className="w-4 h-4 text-emerald-600" />
                     パーソナル・プロファイル
                 </CardTitle>
-                {!isEditing ? (
-                    <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setIsEditing(true)}>
-                        <Edit2 className="w-3 h-3 text-slate-400" />
-                    </Button>
-                ) : (
-                    <div className="flex gap-1">
-                        <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => setIsEditing(false)}><X className="w-3 h-3" /></Button>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 text-emerald-500" onClick={handleSave}><Save className="w-3 h-3" /></Button>
-                    </div>
-                )}
+                <div className="flex gap-1">
+                    <ProfileEditModal member={member} />
+                    {!isEditing ? (
+                        <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setIsEditing(true)}>
+                            <Edit2 className="w-3 h-3 text-slate-400" />
+                        </Button>
+                    ) : (
+                        <div className="flex gap-1">
+                            <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={() => setIsEditing(false)}><X className="w-3 h-3" /></Button>
+                            <Button variant="ghost" size="icon" className="h-6 w-6 text-emerald-500" onClick={handleSave}><Save className="w-3 h-3" /></Button>
+                        </div>
+                    )}
+                </div>
             </CardHeader>
             <CardContent className="p-4 space-y-3 text-sm">
                 {/* 1. Name + Age + Gender */}

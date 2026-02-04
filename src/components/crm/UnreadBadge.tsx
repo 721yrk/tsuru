@@ -15,8 +15,8 @@ export default function UnreadBadge() {
 
         fetchCount() // Initial fetch
 
-        // Poll every 10 seconds
-        const interval = setInterval(fetchCount, 10000)
+        // Poll every 3 seconds for faster updates
+        const interval = setInterval(fetchCount, 3000)
 
         return () => clearInterval(interval)
     }, [])

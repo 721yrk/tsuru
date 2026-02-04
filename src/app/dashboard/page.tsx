@@ -93,8 +93,14 @@ export default async function DashboardPage() {
             .reduce((sum, m) => sum + (m.contractedSessions || 0), 0)
     }
 
-    const yujiSlots = calculateSessions(['Yuji', 'ゆうじ', '優志', '夏井 優志'])
-    const risaSlots = calculateSessions(['Risa', 'りさ', 'RISA', '莉沙', '夏井 莉沙'])
+    const yujiSlots = calculateSessions(['Yuji', 'ゆうじ'])
+    const risaSlots = calculateSessions(['Risa', 'りさ'])
+
+    // DEBUG: Log members contributing to Yuji's slots to find the "6" mystery
+    const yujiContributors = allMembers
+        .filter(m => ['Yuji', 'ゆうじ'].some(k => m.mainTrainer?.name?.includes(k)))
+        .map(m => `${m.name} (${m.contractedSessions})`)
+    console.log('[Dashboard] Yuji Contributors:', yujiContributors)
 
     const capacityData = [
         { name: 'YUJI', current: yujiSlots, max: MAX_CAPACITY },

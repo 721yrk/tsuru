@@ -16,18 +16,28 @@ const PLAN_OPTIONS = [
     { value: MEMBER_PLANS.TICKET.id, label: MEMBER_PLANS.TICKET.label, color: "bg-amber-100 text-amber-700" },
 ]
 
-export function MemberSettingsCard({ member }: { member: any }) {
+interface Trainer {
+    id: string;
+    name: string;
+}
+
+export function MemberSettingsCard({ member, trainers = [] }: { member: any, trainers?: Trainer[] }) {
     const [isEditing, setIsEditing] = useState(false)
     const [plan, setPlan] = useState(member.plan || "STANDARD")
     const [contractedSessions, setContractedSessions] = useState(member.contractedSessions?.toString() || "4")
+    const [mainTrainerId, setMainTrainerId] = useState(member.mainTrainerId || "")
     const [isSaving, setIsSaving] = useState(false)
+
+    // Helper to get trainer name
+    const trainerName = trainers.find(t => t.id === mainTrainerId)?.name || "未割当"
 
     const handleSave = async () => {
         setIsSaving(true)
         try {
             await updateMemberSettings(member.id, {
                 plan,
-                contractedSessions: parseInt(contractedSessions)
+                contractedSessions: (plan === 'STANDARD' || plan === 'PREMIUM') ? parseInt(contractedSessions) : 0, // Reset for others if needed, or keep
+                mainTrainerId: (plan === 'STANDARD' || plan === 'PREMIUM') ? mainTrainerId : null
             })
             setIsEditing(false)
         } catch (error) {
@@ -40,10 +50,12 @@ export function MemberSettingsCard({ member }: { member: any }) {
     const handleCancel = () => {
         setPlan(member.plan || "STANDARD")
         setContractedSessions(member.contractedSessions?.toString() || "4")
+        setMainTrainerId(member.mainTrainerId || "")
         setIsEditing(false)
     }
 
     const currentPlanOption = PLAN_OPTIONS.find(p => p.value === plan) || PLAN_OPTIONS[0]
+    const showAdvanced = plan === 'STANDARD' || plan === 'PREMIUM'
 
     return (
         <Card className="h-full border-l-4 border-l-indigo-500 shadow-sm hover:shadow-md transition-shadow">
@@ -91,38 +103,62 @@ export function MemberSettingsCard({ member }: { member: any }) {
                     )}
                 </div>
 
-                {/* Contracted Sessions */}
-                <div className="space-y-2">
-                    <label className="text-xs font-bold text-slate-600">月間契約回数</label>
-                    {isEditing ? (
-                        <div className="flex items-center gap-2">
-                            <Input
-                                type="number"
-                                min="1"
-                                max="30"
-                                className="w-20"
-                                value={contractedSessions}
-                                onChange={e => setContractedSessions(e.target.value)}
-                                disabled={isSaving}
-                            />
-                            <span className="text-sm text-slate-500">回/月</span>
+                {/* Conditional Fields: Trainer & Sessions */}
+                {showAdvanced && (
+                    <>
+                        {/* Trainer Selection */}
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-600">メンバー枠 (担当)</label>
+                            {isEditing ? (
+                                <Select value={mainTrainerId} onValueChange={setMainTrainerId} disabled={isSaving}>
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue placeholder="担当トレーナーを選択" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="unassigned">未割当</SelectItem>
+                                        {trainers.map(t => (
+                                            <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            ) : (
+                                <div className="text-sm font-medium text-slate-800 flex items-center gap-2">
+                                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                    {member.mainTrainer?.name || "未割当"}
+                                </div>
+                            )}
                         </div>
-                    ) : (
-                        <div className="text-2xl font-bold text-indigo-600">
-                            {contractedSessions} <span className="text-sm text-slate-500 font-normal">回/月</span>
+
+                        {/* Contracted Sessions */}
+                        <div className="space-y-2">
+                            <label className="text-xs font-bold text-slate-600">月間契約回数</label>
+                            {isEditing ? (
+                                <div className="flex items-center gap-2">
+                                    <Input
+                                        type="number"
+                                        min="1"
+                                        max="30"
+                                        className="w-20"
+                                        value={contractedSessions}
+                                        onChange={e => setContractedSessions(e.target.value)}
+                                        disabled={isSaving}
+                                    />
+                                    <span className="text-sm text-slate-500">回/月</span>
+                                </div>
+                            ) : (
+                                <div className="text-2xl font-bold text-indigo-600">
+                                    {contractedSessions} <span className="text-sm text-slate-500 font-normal">回/月</span>
+                                </div>
+                            )}
                         </div>
-                    )}
-                </div>
+                    </>
+                )}
 
                 {/* Summary Info */}
                 <div className="pt-3 border-t space-y-2">
                     <div className="text-xs text-slate-500">
                         <span className="font-semibold">現在のプラン:</span> {currentPlanOption.label}
                     </div>
-                    <div className="text-xs text-slate-500">
-                        <span className="font-semibold">月間契約:</span> {contractedSessions}回まで
-                    </div>
-
                 </div>
             </CardContent>
         </Card>

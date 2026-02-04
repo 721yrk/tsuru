@@ -114,7 +114,7 @@ export default async function MembersPage({ searchParams }: { searchParams: { id
 
                             {/* Block 3: Member Settings (Full Width) */}
                             <div className="col-span-2 h-[300px]">
-                                <MemberSettingsCard member={selectedMember} />
+                                <MemberSettingsCard member={selectedMember} trainers={trainers} />
                             </div>
 
                             {/* Block 4: Conditioning (Middle Full Width) */}

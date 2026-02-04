@@ -12,38 +12,52 @@ export async function createMember(formData: FormData) {
     const plan = formData.get("plan") as string
     const contractedSessions = parseInt(formData.get("contractedSessions") as string)
 
-    // Check existing
-    const existing = await prisma.user.findUnique({ where: { email } })
-    if (existing) return { success: false, error: "Email already exists" }
+    // Check existing only if email is provided
+    if (email) {
+        const existing = await prisma.user.findUnique({ where: { email } })
+        if (existing) return { success: false, error: "Email already exists" }
+    }
 
     try {
-        // Create User & Member in transaction
-        await prisma.$transaction(async (tx) => {
-            const user = await tx.user.create({
-                data: {
-                    name,
-                    email,
-                    passwordHash: await hash("password", 10), // Default password
-                    role: "MEMBER"
-                }
-            })
+        const joinDate = joinDateStr ? new Date(joinDateStr) : new Date()
 
-            const joinDate = joinDateStr ? new Date(joinDateStr) : new Date()
+        // Common member data
+        const memberData = {
+            name,
+            dateOfBirth: new Date("1990-01-01"), // Default dummy
+            gender: "OTHER",
+            phone: "000-0000-0000",
+            emergencyContact: "None",
+            joinDate: joinDate,
+            plan,
+            contractedSessions
+        }
 
-            await tx.member.create({
-                data: {
-                    userId: user.id,
-                    name,
-                    dateOfBirth: new Date("1990-01-01"), // Default dummy
-                    gender: "OTHER",
-                    phone: "000-0000-0000",
-                    emergencyContact: "None",
-                    joinDate: joinDate,
-                    plan,
-                    contractedSessions
-                }
+        if (email) {
+            // Create User & Member linked
+            await prisma.$transaction(async (tx) => {
+                const user = await tx.user.create({
+                    data: {
+                        name,
+                        email,
+                        passwordHash: await hash("password", 10), // Default password
+                        role: "MEMBER"
+                    }
+                })
+
+                await tx.member.create({
+                    data: {
+                        ...memberData,
+                        userId: user.id
+                    }
+                })
             })
-        })
+        } else {
+            // Create Member only (No User/Login)
+            await prisma.member.create({
+                data: memberData
+            })
+        }
 
         revalidatePath("/dashboard/members")
         revalidatePath("/dashboard/settings")

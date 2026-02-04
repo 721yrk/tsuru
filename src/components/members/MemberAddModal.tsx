@@ -47,8 +47,8 @@ export function MemberAddModal() {
                             <Input id="name" name="name" placeholder="山田 太郎" className="col-span-3" required />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
-                            <Label htmlFor="email" className="text-right">Email</Label>
-                            <Input id="email" name="email" type="email" placeholder="taro@example.com" className="col-span-3" required />
+                            <Label htmlFor="email" className="text-right">Email <span className="text-xs text-slate-400 font-normal">(任意)</span></Label>
+                            <Input id="email" name="email" type="email" placeholder="taro@example.com" className="col-span-3" />
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                             <Label htmlFor="joinDate" className="text-right">入会日</Label>

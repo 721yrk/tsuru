@@ -4,8 +4,10 @@ import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Search, Tag as TagIcon, MoreHorizontal } from "lucide-react"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Search, Tag as TagIcon, MoreHorizontal, User as UserIcon } from "lucide-react"
 import Link from "next/link"
+import { LineMessageModal } from "@/components/crm/LineMessageModal"
 
 // This page will list all users (MEMBERS) and their CRM data (Tags, Rich Menu, Attributes)
 async function getMembers(query: string = "") {
@@ -14,7 +16,8 @@ async function getMembers(query: string = "") {
             OR: [
                 { name: { contains: query, mode: 'insensitive' } },
                 { email: { contains: query, mode: 'insensitive' } },
-                { lineUserId: { contains: query, mode: 'insensitive' } }
+                { lineUserId: { contains: query, mode: 'insensitive' } },
+                { lineDisplayName: { contains: query, mode: 'insensitive' } } // Added search by LINE Name
             ]
         },
         include: {
@@ -54,7 +57,7 @@ export default async function MemberListPage({ searchParams }: { searchParams: {
                             <form>
                                 <Input
                                     name="q"
-                                    placeholder="名前、LINE ID、メールで検索..."
+                                    placeholder="名前、LINE名、IDで検索..."
                                     className="pl-9"
                                     defaultValue={query}
                                 />
@@ -66,6 +69,7 @@ export default async function MemberListPage({ searchParams }: { searchParams: {
                     <Table>
                         <TableHeader>
                             <TableRow>
+                                <TableHead className="w-[80px]">LINE</TableHead>
                                 <TableHead>ユーザー名</TableHead>
                                 <TableHead>ステータス</TableHead>
                                 <TableHead>タグ</TableHead>
@@ -77,19 +81,40 @@ export default async function MemberListPage({ searchParams }: { searchParams: {
                         <TableBody>
                             {members.map((member) => (
                                 <TableRow key={member.id} className="cursor-pointer hover:bg-slate-50">
+                                    <TableCell>
+                                        <div className="relative">
+                                            <Avatar className="h-10 w-10 border border-slate-200">
+                                                <AvatarImage src={member.linePictureUrl || ""} alt={member.lineDisplayName || ""} />
+                                                <AvatarFallback className="bg-slate-100 text-slate-400">
+                                                    <UserIcon className="h-5 w-5" />
+                                                </AvatarFallback>
+                                            </Avatar>
+                                            {member.isLineFriend && (
+                                                <span className="absolute -bottom-1 -right-1 flex h-4 w-4 border-2 border-white rounded-full bg-[#06C755]" title="友だち登録中" />
+                                            )}
+                                        </div>
+                                    </TableCell>
                                     <TableCell className="font-medium">
                                         <div className="flex flex-col">
-                                            <span>{member.name}</span>
-                                            <span className="text-xs text-slate-400">{member.email}</span>
+                                            <span className="text-base text-slate-700">{member.name}</span>
+                                            {member.lineDisplayName && member.lineDisplayName !== member.name && (
+                                                <span className="text-xs text-[#06C755] flex items-center gap-1">
+                                                    LINE: {member.lineDisplayName}
+                                                </span>
+                                            )}
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        {member.lineUserId ? (
+                                        {member.isLineFriend ? (
                                             <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                                                LINE連携済
+                                                友だち
+                                            </Badge>
+                                        ) : member.lineUserId ? (
+                                            <Badge variant="outline" className="bg-slate-100 text-slate-500 border-slate-200">
+                                                ブロック/未追加
                                             </Badge>
                                         ) : (
-                                            <Badge variant="outline" className="text-slate-500">
+                                            <Badge variant="outline" className="text-slate-400">
                                                 未連携
                                             </Badge>
                                         )}
@@ -118,11 +143,20 @@ export default async function MemberListPage({ searchParams }: { searchParams: {
                                         {new Date(member.createdAt).toLocaleDateString()}
                                     </TableCell>
                                     <TableCell className="text-right">
-                                        <Link href={`/dashboard/crm/members/${member.id}`}>
-                                            <Button variant="ghost" size="sm">
-                                                詳細
-                                            </Button>
-                                        </Link>
+                                        <div className="flex justify-end gap-2 items-center">
+                                            {member.isLineFriend && (
+                                                <LineMessageModal
+                                                    userId={member.id}
+                                                    userName={member.name}
+                                                    lineDisplayName={member.lineDisplayName}
+                                                />
+                                            )}
+                                            <Link href={`/dashboard/crm/members/${member.id}`}>
+                                                <Button variant="ghost" size="sm">
+                                                    詳細
+                                                </Button>
+                                            </Link>
+                                        </div>
                                     </TableCell>
                                 </TableRow>
                             ))}

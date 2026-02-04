@@ -32,12 +32,17 @@ export async function POST(req: NextRequest) {
                         await prisma.user.upsert({
                             where: { lineUserId },
                             update: {
-                                name: profile.displayName, // Update name if changed
-                                // We could update an 'isActive' flag here if we had one
+                                name: profile.displayName,
+                                lineDisplayName: profile.displayName,
+                                linePictureUrl: profile.pictureUrl,
+                                isLineFriend: true
                             },
                             create: {
                                 lineUserId,
                                 name: profile.displayName,
+                                lineDisplayName: profile.displayName,
+                                linePictureUrl: profile.pictureUrl,
+                                isLineFriend: true,
                                 email: `line_${lineUserId}@sheeka.local`, // Placeholder unique email
                                 passwordHash: '$2a$12$DummyHashForLineUser_______________________', // Unusable hash
                                 role: 'MEMBER',
@@ -59,6 +64,19 @@ export async function POST(req: NextRequest) {
                         });
                     } catch (e) {
                         console.error('Error handling follow event:', e);
+                    }
+                }
+
+                // 2. Handle Unfollow (Block)
+                if (event.type === 'unfollow') {
+                    console.log(`Unfollowed by: ${lineUserId}`);
+                    try {
+                        await prisma.user.update({
+                            where: { lineUserId },
+                            data: { isLineFriend: false }
+                        });
+                    } catch (e) {
+                        console.error('Error handling unfollow event:', e);
                     }
                 }
 

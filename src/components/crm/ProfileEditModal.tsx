@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import {
     Dialog,
@@ -40,6 +40,19 @@ export default function ProfileEditModal({ member }: ProfileEditModalProps) {
         dateOfBirth: member.memberProfile?.dateOfBirth ? new Date(member.memberProfile.dateOfBirth).toISOString().split('T')[0] : "",
         joinDate: member.memberProfile?.joinDate ? new Date(member.memberProfile.joinDate).toISOString().split('T')[0] : "",
     })
+
+    // Reset form when modal opens to ensure fresh data
+    useEffect(() => {
+        if (open) {
+            setFormData({
+                name: member.name || "",
+                kana: member.memberProfile?.kana || "",
+                gender: member.memberProfile?.gender || "UNKNOWN",
+                dateOfBirth: member.memberProfile?.dateOfBirth ? new Date(member.memberProfile.dateOfBirth).toISOString().split('T')[0] : "",
+                joinDate: member.memberProfile?.joinDate ? new Date(member.memberProfile.joinDate).toISOString().split('T')[0] : "",
+            })
+        }
+    }, [open, member])
 
     const handleSave = async () => {
         setIsLoading(true)

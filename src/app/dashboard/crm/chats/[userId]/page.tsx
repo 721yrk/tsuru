@@ -7,6 +7,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { ArrowLeft, Send } from "lucide-react"
 import Link from "next/link"
 import ChatInput from "@/components/crm/ChatInput"
+import ChatAutoRefresh from "@/components/crm/ChatAutoRefresh"
 import { Badge } from "@/components/ui/badge"
 
 async function getChatHistory(userId: string) {
@@ -96,6 +97,7 @@ export default async function ChatPage(props: { params: Promise<{ userId: string
                     <ChatInput userId={user.id} />
                 </div>
             </div>
+            <ChatAutoRefresh />
         </div>
     )
 }

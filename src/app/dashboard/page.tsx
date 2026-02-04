@@ -85,22 +85,20 @@ export default async function DashboardPage() {
     // C. Capacity Tracking (Yuji & Risa)
     // Find trainers by name or role. Hardcoding names for specific request.
     const MAX_CAPACITY = 60
-    const yujiMembers = allMembers.filter(m =>
-        m.mainTrainer?.name?.includes('Yuji') ||
-        m.mainTrainer?.name?.includes('ゆうじ') ||
-        m.mainTrainer?.name?.includes('夏井') ||
-        m.mainTrainer?.name?.includes('優志')
-    ).length
 
-    const risaMembers = allMembers.filter(m =>
-        m.mainTrainer?.name?.includes('Risa') ||
-        m.mainTrainer?.name?.includes('りさ') ||
-        m.mainTrainer?.name?.includes('RISA')
-    ).length
+    // Helper to calculate total sessions for a trainer
+    const calculateSessions = (trainerKeywords: string[]) => {
+        return allMembers
+            .filter(m => trainerKeywords.some(k => m.mainTrainer?.name?.includes(k)))
+            .reduce((sum, m) => sum + (m.contractedSessions || 0), 0)
+    }
+
+    const yujiSlots = calculateSessions(['Yuji', 'ゆうじ', '夏井', '優志'])
+    const risaSlots = calculateSessions(['Risa', 'りさ', 'RISA'])
 
     const capacityData = [
-        { name: 'YUJI', current: yujiMembers, max: MAX_CAPACITY },
-        { name: 'RISA', current: risaMembers, max: MAX_CAPACITY },
+        { name: 'YUJI', current: yujiSlots, max: MAX_CAPACITY },
+        { name: 'RISA', current: risaSlots, max: MAX_CAPACITY },
     ]
 
     // D. Financials

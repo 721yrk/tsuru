@@ -80,9 +80,23 @@ export async function POST(req: NextRequest) {
                     }
                 }
 
-                // 3. Handle Text Message
-                if (event.type === 'message' && event.message.type === 'text') {
+                // 3. Handle Text Message & Sticker
+                if (event.type === 'message') {
                     try {
+                        const messageType = event.message.type;
+                        let content = '';
+
+                        if (messageType === 'text') {
+                            content = (event.message as any).text; // Type assertion for safety
+                        } else if (messageType === 'sticker') {
+                            content = '[スタンプを受信しました]';
+                        } else if (messageType === 'image') {
+                            content = '[画像を受信しました]';
+                        } else {
+                            // Skip other types for now
+                            return;
+                        }
+
                         // Find user first
                         let user = await prisma.user.findUnique({ where: { lineUserId } });
 
@@ -122,7 +136,7 @@ export async function POST(req: NextRequest) {
                                 data: {
                                     userId: user.id,
                                     sender: 'USER',
-                                    content: event.message.text
+                                    content: content
                                 }
                             });
                         }

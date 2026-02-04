@@ -1,6 +1,3 @@
-
-import DashboardClient from "@/components/dashboard/DashboardClient"
-
 import DashboardClient from "@/components/dashboard/DashboardClient"
 import { prisma } from "@/lib/db"
 

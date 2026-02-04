@@ -22,7 +22,8 @@ async function getUser(userId: string) {
     })
 }
 
-export default async function ChatPage({ params }: { params: { userId: string } }) {
+export default async function ChatPage(props: { params: Promise<{ userId: string }> }) {
+    const params = await props.params;
     const user = await getUser(params.userId)
     const messages = await getChatHistory(params.userId)
 

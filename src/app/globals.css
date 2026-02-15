@@ -3,7 +3,7 @@
 
 @layer base {
   :root {
-    /* Botanical Modern Palette */
+    /* TSURU Indigo Palette */
     /* Background: Soft Off-White */
     --background: 210 20% 98%;
     --foreground: 220 10% 20%;
@@ -16,26 +16,26 @@
     --popover: 0 0% 100%;
     --popover-foreground: 220 10% 20%;
 
-    /* Primary: Clover Green (#4CAF50 -> 122 39% 49%) */
-    --primary: 122 39% 49%;
+    /* Primary: TSURU Indigo (#1B1464 -> 243 67% 24%) */
+    --primary: 243 67% 24%;
     --primary-foreground: 0 0% 100%;
 
-    /* Secondary: Soft Sage/Gray */
-    --secondary: 130 10% 94%;
-    --secondary-foreground: 122 39% 49%;
+    /* Secondary: Soft Indigo/Gray */
+    --secondary: 230 15% 94%;
+    --secondary-foreground: 243 67% 24%;
 
     --muted: 210 10% 96%;
     --muted-foreground: 215 10% 55%;
 
-    --accent: 130 20% 96%;
-    --accent-foreground: 122 39% 49%;
+    --accent: 230 25% 96%;
+    --accent-foreground: 243 67% 24%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 220 10% 90%;
     --input: 220 10% 90%;
-    --ring: 122 39% 49%;
+    --ring: 243 67% 24%;
 
     --radius: 0.75rem;
     /* Slightly more rounded */

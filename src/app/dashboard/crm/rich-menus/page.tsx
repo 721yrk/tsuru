@@ -28,7 +28,7 @@ export default async function RichMenuPage() {
                     </p>
                 </div>
                 <Link href="/dashboard/crm/rich-menus/new">
-                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                         <Plus className="w-4 h-4 mr-2" />
                         新規作成
                     </Button>
@@ -58,7 +58,7 @@ export default async function RichMenuPage() {
                                 </div>
                             )}
                             {menu.selected && (
-                                <Badge className="absolute top-2 right-2 bg-emerald-500 hover:bg-emerald-600">
+                                <Badge className="absolute top-2 right-2 bg-indigo-500 hover:bg-indigo-600">
                                     デフォルト
                                 </Badge>
                             )}

@@ -73,7 +73,7 @@ export default function NewFormPage() {
                         アンケートや申込フォームを作成します。
                     </p>
                 </div>
-                <Button onClick={handleSave} className="bg-emerald-600 hover:bg-emerald-700">
+                <Button onClick={handleSave} className="bg-indigo-600 hover:bg-indigo-700">
                     <Save className="w-4 h-4 mr-2" />
                     保存する
                 </Button>

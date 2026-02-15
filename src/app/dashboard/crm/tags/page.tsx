@@ -62,7 +62,7 @@ export default async function TagsPage() {
                                     <span className="text-xs text-slate-400 self-center">クリックして色を選択</span>
                                 </div>
                             </div>
-                            <Button type="submit" className="w-full bg-emerald-600 hover:bg-emerald-700">
+                            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700">
                                 <Plus className="w-4 h-4 mr-2" />
                                 追加する
                             </Button>

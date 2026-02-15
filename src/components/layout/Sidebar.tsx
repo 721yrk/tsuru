@@ -73,7 +73,7 @@ export const Sidebar = () => {
             <div className="px-6 py-4 flex-1">
                 <Link href="/dashboard" className="flex flex-col mb-10 pl-2">
                     <div className="flex items-center gap-2 mb-1">
-                        <div className="relative w-8 h-8">
+                        <div className="relative w-12 h-12">
                             <Image
                                 src="/tsuru_logo.png"
                                 alt="TSURU Logo"
@@ -81,9 +81,6 @@ export const Sidebar = () => {
                                 className="object-contain"
                             />
                         </div>
-                        <h1 className="text-2xl font-serif text-slate-800 tracking-tight">
-                            TSURU
-                        </h1>
                     </div>
                     <p className="text-[10px] text-slate-400 font-medium tracking-wide">
                         Powered by 幸せをカタチにする株式会社
@@ -101,13 +98,13 @@ export const Sidebar = () => {
                                 className={cn(
                                     "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                     pathname === route.href
-                                        ? "bg-emerald-50 text-emerald-700 shadow-sm"
-                                        : "text-slate-500 hover:text-emerald-600 hover:bg-slate-50"
+                                        ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                                        : "text-slate-500 hover:text-indigo-600 hover:bg-slate-50"
                                 )}
                             >
                                 <div className="flex items-center flex-1">
                                     <route.icon className={cn("h-5 w-5 mr-3 transition-colors",
-                                        pathname === route.href ? "text-emerald-600" : "text-slate-400 group-hover:text-emerald-500"
+                                        pathname === route.href ? "text-indigo-600" : "text-slate-400 group-hover:text-indigo-500"
                                     )} />
                                     {route.label}
                                 </div>
@@ -125,13 +122,13 @@ export const Sidebar = () => {
                                 className={cn(
                                     "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                     pathname === route.href
-                                        ? "bg-emerald-50 text-emerald-700 shadow-sm"
-                                        : "text-slate-500 hover:text-emerald-600 hover:bg-slate-50"
+                                        ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                                        : "text-slate-500 hover:text-indigo-600 hover:bg-slate-50"
                                 )}
                             >
                                 <div className="flex items-center flex-1 w-full">
                                     <route.icon className={cn("h-5 w-5 mr-3 transition-colors flex-shrink-0",
-                                        pathname === route.href ? "text-emerald-600" : "text-slate-400 group-hover:text-emerald-500"
+                                        pathname === route.href ? "text-indigo-600" : "text-slate-400 group-hover:text-indigo-500"
                                     )} />
                                     <span>{route.label}</span>
                                     {route.label === "1:1チャット" && <UnreadBadge />}
@@ -150,13 +147,13 @@ export const Sidebar = () => {
                                 className={cn(
                                     "text-sm group flex p-3 w-full justify-start font-medium cursor-pointer rounded-xl transition-all duration-200",
                                     pathname === route.href
-                                        ? "bg-emerald-50 text-emerald-700 shadow-sm"
-                                        : "text-slate-500 hover:text-emerald-600 hover:bg-slate-50"
+                                        ? "bg-indigo-50 text-indigo-700 shadow-sm"
+                                        : "text-slate-500 hover:text-indigo-600 hover:bg-slate-50"
                                 )}
                             >
                                 <div className="flex items-center flex-1">
                                     <route.icon className={cn("h-5 w-5 mr-3 transition-colors",
-                                        pathname === route.href ? "text-emerald-600" : "text-slate-400 group-hover:text-emerald-500"
+                                        pathname === route.href ? "text-indigo-600" : "text-slate-400 group-hover:text-indigo-500"
                                     )} />
                                     {route.label}
                                 </div>

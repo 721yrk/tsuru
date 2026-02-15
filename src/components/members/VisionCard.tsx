@@ -34,7 +34,7 @@ export function VisionCard({ member }: { member: any }) {
                 ) : (
                     <div className="flex gap-1">
                         <Button variant="ghost" size="icon" className="h-5 w-5 text-red-500" onClick={() => setIsEditing(false)}><X className="w-3 h-3" /></Button>
-                        <Button variant="ghost" size="icon" className="h-5 w-5 text-emerald-500" onClick={handleSave}><Save className="w-3 h-3" /></Button>
+                        <Button variant="ghost" size="icon" className="h-5 w-5 text-indigo-500" onClick={handleSave}><Save className="w-3 h-3" /></Button>
                     </div>
                 )}
             </CardHeader>

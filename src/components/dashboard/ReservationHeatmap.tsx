@@ -37,9 +37,9 @@ export function ReservationHeatmap() {
                                 const level = getHeat(dIndex, h)
                                 const colors = [
                                     "bg-slate-50", // 0
-                                    "bg-emerald-100", // 1
-                                    "bg-emerald-300", // 2
-                                    "bg-emerald-500", // 3
+                                    "bg-indigo-100", // 1
+                                    "bg-indigo-300", // 2
+                                    "bg-indigo-500", // 3
                                 ]
                                 return (
                                     <div
@@ -53,9 +53,9 @@ export function ReservationHeatmap() {
                     ))}
                 </div>
                 <div className="flex justify-end gap-2 mt-2 text-[10px] text-slate-400">
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 bg-emerald-100"></div>空き</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 bg-emerald-300"></div>通常</span>
-                    <span className="flex items-center gap-1"><div className="w-2 h-2 bg-emerald-500"></div>混雑</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 bg-indigo-100"></div>空き</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 bg-indigo-300"></div>通常</span>
+                    <span className="flex items-center gap-1"><div className="w-2 h-2 bg-indigo-500"></div>混雑</span>
                 </div>
             </CardContent>
         </Card>

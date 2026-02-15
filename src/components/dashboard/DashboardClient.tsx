@@ -46,7 +46,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         <div className="p-8 space-y-6 bg-slate-50 min-h-screen">
             <div className="flex justify-between items-center mb-2">
                 <div>
-                    <h1 className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                    <h1 className="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-teal-600 bg-clip-text text-transparent">
                         管理者ダッシュボード
                     </h1>
                     <p className="text-sm text-slate-500">店舗運営ステータス (Store Operations Status)</p>
@@ -58,10 +58,10 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
 
             {/* --- TOP METRICS: Members & Sales & Flow --- */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="border-l-4 border-l-emerald-500 shadow-sm">
+                <Card className="border-l-4 border-l-indigo-500 shadow-sm">
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium text-slate-600">総会員数</CardTitle>
-                        <Users className="h-4 w-4 text-emerald-500" />
+                        <Users className="h-4 w-4 text-indigo-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold text-slate-800">{data.memberStats.total} <span className="text-xs font-normal text-slate-400">名</span></div>
@@ -87,7 +87,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
                     <CardContent className="flex justify-between items-end pt-2">
                         <div className="text-center">
                             <div className="text-xs text-slate-400">入会</div>
-                            <div className="text-lg font-bold text-emerald-600">{data.flow.newEntries}</div>
+                            <div className="text-lg font-bold text-indigo-600">{data.flow.newEntries}</div>
                         </div>
                         <div className="text-center">
                             <div className="text-xs text-slate-400">退会</div>
@@ -115,7 +115,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
                 {/* 1. Contract Breakdown */}
-                <Card className="col-span-1 border-t-2 border-t-emerald-100 shadow-sm">
+                <Card className="col-span-1 border-t-2 border-t-indigo-100 shadow-sm">
                     <CardHeader>
                         <CardTitle className="text-base text-slate-700">会員契約内訳</CardTitle>
                     </CardHeader>
@@ -126,7 +126,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
                                 <span className="font-bold">{data.memberStats.standard}名</span>
                             </div>
                             <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
-                                <div className="h-full bg-emerald-500" style={{ width: `${(data.memberStats.standard / data.memberStats.total) * 100}%` }}></div>
+                                <div className="h-full bg-indigo-500" style={{ width: `${(data.memberStats.standard / data.memberStats.total) * 100}%` }}></div>
                             </div>
                         </div>
                         <div className="space-y-2">
@@ -208,7 +208,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
                                     </div>
                                     <div className="relative h-4 w-full bg-slate-100 rounded-full overflow-hidden">
                                         <div
-                                            className={`h-full rounded-full transition-all ${percent > 90 ? 'bg-rose-500' : 'bg-emerald-500'}`}
+                                            className={`h-full rounded-full transition-all ${percent > 90 ? 'bg-rose-500' : 'bg-indigo-500'}`}
                                             style={{ width: `${percent}%` }}
                                         />
                                     </div>
@@ -257,7 +257,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
                     <CardContent>
                         <div className="space-y-1">
                             {[
-                                { label: 'スタンダード予約', val: data.bookingStats.standard, color: 'text-emerald-600' },
+                                { label: 'スタンダード予約', val: data.bookingStats.standard, color: 'text-indigo-600' },
                                 { label: 'プレミアム予約', val: data.bookingStats.premium, color: 'text-violet-600' },
                                 { label: 'デジタルプリペイド予約', val: data.bookingStats.digitalPrepaid, color: 'text-blue-600' },
                                 { label: '回数券予約', val: data.bookingStats.ticket, color: 'text-amber-600' },

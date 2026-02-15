@@ -127,7 +127,7 @@ export default function NewBroadcastPage() {
                                 下書き保存
                             </Button>
                             <Button
-                                className="w-full bg-emerald-600 hover:bg-emerald-700"
+                                className="w-full bg-indigo-600 hover:bg-indigo-700"
                                 onClick={() => handleSave("SENDING")}
                                 disabled={isLoading || !title || !messageText}
                             >

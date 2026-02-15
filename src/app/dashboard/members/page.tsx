@@ -47,7 +47,7 @@ export default async function MembersPage({ searchParams }: { searchParams: { id
             {/* Header */}
             <div className="flex justify-between items-center bg-white p-4 rounded-lg border shadow-sm">
                 <h2 className="text-lg font-bold flex items-center gap-2 text-slate-800">
-                    <Users className="w-5 h-5 text-emerald-600" />
+                    <Users className="w-5 h-5 text-indigo-600" />
                     メンバー管理総合ダッシュボード
                 </h2>
                 <MemberAddModal trainers={trainers} />
@@ -80,9 +80,9 @@ export default async function MembersPage({ searchParams }: { searchParams: { id
                                         "use server"
                                         redirect(`/dashboard/members?id=${member.id}`)
                                     }}>
-                                        <button className={`w-full text-left p-3 rounded transition-all ${isSelected ? 'bg-emerald-50 border-emerald-200 ring-1 ring-emerald-200' : 'hover:bg-slate-50 border border-transparent'}`}>
+                                        <button className={`w-full text-left p-3 rounded transition-all ${isSelected ? 'bg-indigo-50 border-indigo-200 ring-1 ring-indigo-200' : 'hover:bg-slate-50 border border-transparent'}`}>
                                             <div className="flex justify-between items-start mb-1">
-                                                <div className={`font-bold ${isSelected ? 'text-emerald-800' : 'text-slate-700'}`}>{member.name}</div>
+                                                <div className={`font-bold ${isSelected ? 'text-indigo-800' : 'text-slate-700'}`}>{member.name}</div>
                                                 {diffYears >= 1 && (
                                                     <div className={`text-[10px] px-1.5 py-0.5 rounded ${rankColor}`}>
                                                         {Math.floor(diffYears)}年

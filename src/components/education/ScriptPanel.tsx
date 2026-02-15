@@ -12,7 +12,7 @@ export function ScriptPanel({ content }: ScriptPanelProps) {
         <div className="h-full flex flex-col gap-6 overflow-y-auto pr-2">
             <div>
                 <h2 className="text-xl font-bold text-slate-800 mb-2 flex items-center gap-2">
-                    <MessageCircle className="w-6 h-6 text-emerald-600" />
+                    <MessageCircle className="w-6 h-6 text-indigo-600" />
                     標準トークスクリプト
                 </h2>
                 <p className="text-sm text-slate-500">
@@ -42,7 +42,7 @@ export function ScriptPanel({ content }: ScriptPanelProps) {
                     stepNumber={3}
                     title={content.script.step3.title}
                     text={content.script.step3.text}
-                    color="emerald"
+                    color="purple"
                 />
             </div>
 
@@ -64,17 +64,17 @@ export function ScriptPanel({ content }: ScriptPanelProps) {
     )
 }
 
-function StepCard({ stepNumber, title, text, color }: { stepNumber: number, title: string, text: string, color: 'blue' | 'indigo' | 'emerald' }) {
+function StepCard({ stepNumber, title, text, color }: { stepNumber: number, title: string, text: string, color: 'blue' | 'indigo' | 'purple' }) {
     const colorClasses = {
         blue: 'bg-blue-50 border-blue-100 text-blue-900 ring-blue-500',
         indigo: 'bg-indigo-50 border-indigo-100 text-indigo-900 ring-indigo-500',
-        emerald: 'bg-emerald-50 border-emerald-100 text-emerald-900 ring-emerald-500',
+        purple: 'bg-purple-50 border-purple-100 text-purple-900 ring-purple-500',
     }
 
     const badgeClasses = {
         blue: 'bg-blue-500 text-white',
         indigo: 'bg-indigo-500 text-white',
-        emerald: 'bg-emerald-500 text-white',
+        purple: 'bg-purple-500 text-white',
     }
 
     return (

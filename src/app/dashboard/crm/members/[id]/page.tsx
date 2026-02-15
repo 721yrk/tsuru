@@ -69,7 +69,7 @@ export default async function MemberDetailPage(props: { params: Promise<{ id: st
                         <Menu className="w-4 h-4 mr-2" />
                         リッチメニュー変更
                     </Button>
-                    <Button className="bg-emerald-600 hover:bg-emerald-700">
+                    <Button className="bg-indigo-600 hover:bg-indigo-700">
                         <MessageSquare className="w-4 h-4 mr-2" />
                         チャットを開く
                     </Button>
@@ -175,14 +175,14 @@ export default async function MemberDetailPage(props: { params: Promise<{ id: st
                     <Card className="bg-slate-50/50 border-slate-200">
                         <CardHeader className="pb-3">
                             <CardTitle className="text-base flex items-center">
-                                <MessageSquare className="w-4 h-4 mr-2 text-emerald-600" />
+                                <MessageSquare className="w-4 h-4 mr-2 text-indigo-600" />
                                 直近のチャット
                             </CardTitle>
                         </CardHeader>
                         <CardContent className="space-y-3">
                             {member.chats.length > 0 ? (
                                 member.chats.map(chat => (
-                                    <div key={chat.id} className={`text-sm p-3 rounded-lg ${chat.sender === 'ADMIN' ? 'bg-emerald-100 ml-4' : 'bg-white border mr-4'}`}>
+                                    <div key={chat.id} className={`text-sm p-3 rounded-lg ${chat.sender === 'ADMIN' ? 'bg-indigo-100 ml-4' : 'bg-white border mr-4'}`}>
                                         <p className="text-slate-800">{chat.content}</p>
                                         <p className="text-[10px] text-slate-400 mt-1 text-right">
                                             {new Date(chat.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}

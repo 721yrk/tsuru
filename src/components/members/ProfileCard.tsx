@@ -27,10 +27,10 @@ export function ProfileCard({ member }: { member: any }) {
     const genderLabel = member.gender === "MALE" ? "男性" : "女性"
 
     return (
-        <Card className="h-full border-l-4 border-l-emerald-500 shadow-sm hover:shadow-md transition-shadow">
+        <Card className="h-full border-l-4 border-l-indigo-500 shadow-sm hover:shadow-md transition-shadow">
             <CardHeader className="pb-2 bg-slate-50 border-b flex flex-row justify-between items-center">
                 <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-700">
-                    <User className="w-4 h-4 text-emerald-600" />
+                    <User className="w-4 h-4 text-indigo-600" />
                     パーソナル・プロファイル (DEBUG)
                 </CardTitle>
                 <div className="flex gap-1">

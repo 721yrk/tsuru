@@ -25,7 +25,7 @@ export default async function BroadcastListPage() {
                     </p>
                 </div>
                 <Link href="/dashboard/crm/messages/broadcast/new">
-                    <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                    <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                         <Plus className="w-4 h-4 mr-2" />
                         新規メッセージ作成
                     </Button>

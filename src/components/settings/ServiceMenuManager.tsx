@@ -78,7 +78,7 @@ export function ServiceMenuManager({ initialMenus }: { initialMenus: ServiceMenu
                             予約可能なコース・メニューを管理します。
                         </CardDescription>
                     </div>
-                    <Button onClick={() => handleOpen()} className="bg-emerald-600 hover:bg-emerald-700">
+                    <Button onClick={() => handleOpen()} className="bg-indigo-600 hover:bg-indigo-700">
                         <Plus className="w-4 h-4 mr-2" /> 新規作成
                     </Button>
                 </div>

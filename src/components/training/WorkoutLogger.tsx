@@ -175,10 +175,10 @@ export function WorkoutLogger({ memberId, trainerId }: { memberId: string, train
     }
 
     return (
-        <Card className="h-full border-2 border-emerald-100 shadow-sm bg-white">
+        <Card className="h-full border-2 border-indigo-100 shadow-sm bg-white">
             <CardHeader className="pb-3 border-b border-slate-100 bg-slate-50/50">
                 <div className="flex justify-between items-center mb-2">
-                    <CardTitle className="flex items-center gap-2 text-emerald-800">
+                    <CardTitle className="flex items-center gap-2 text-indigo-800">
                         <Dumbbell className="w-5 h-5" />
                         トレーニング記録
                     </CardTitle>
@@ -267,12 +267,12 @@ export function WorkoutLogger({ memberId, trainerId }: { memberId: string, train
                 <div className="space-y-4 max-h-[180px] overflow-y-auto pr-1">
                     {sets.map((set, index) => (
                         <div key={set.id} className="bg-white p-3 rounded-lg border border-slate-200 shadow-sm relative">
-                            <div className="absolute top-2 left-2 w-5 text-xs text-white text-center font-bold bg-emerald-500 rounded-full h-5 leading-5 shadow-sm">{index + 1}</div>
+                            <div className="absolute top-2 left-2 w-5 text-xs text-white text-center font-bold bg-indigo-500 rounded-full h-5 leading-5 shadow-sm">{index + 1}</div>
 
                             <div className="absolute top-2 right-2">
                                 <Dialog open={historyOpen} onOpenChange={setHistoryOpen}>
                                     <DialogTrigger asChild>
-                                        <Button variant="ghost" size="icon" className="h-6 w-6 text-slate-300 hover:text-emerald-600">
+                                        <Button variant="ghost" size="icon" className="h-6 w-6 text-slate-300 hover:text-indigo-600">
                                             <History className="w-4 h-4" />
                                         </Button>
                                     </DialogTrigger>
@@ -347,10 +347,10 @@ export function WorkoutLogger({ memberId, trainerId }: { memberId: string, train
                 </div>
 
                 <div className="flex gap-2 pt-2">
-                    <Button variant="outline" onClick={addSet} className="flex-1 border-dashed border-emerald-200 text-emerald-600 hover:bg-emerald-50">
+                    <Button variant="outline" onClick={addSet} className="flex-1 border-dashed border-indigo-200 text-indigo-600 hover:bg-indigo-50">
                         <Plus className="w-4 h-4 mr-1" /> セット追加
                     </Button>
-                    <Button onClick={handleSave} disabled={saving || !isLoaded || !selectedExercise} className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white shadow-md">
+                    <Button onClick={handleSave} disabled={saving || !isLoaded || !selectedExercise} className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white shadow-md">
                         {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 mr-1" />}
                         {saving ? "保存中..." : "記録保存"}
                     </Button>

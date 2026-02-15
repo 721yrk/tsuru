@@ -48,12 +48,12 @@ export default async function MemberHomePage() {
     return (
         <div className="bg-[#FAFDFB] min-h-screen pb-20">
             {/* Header */}
-            <div className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white p-6 pt-12 rounded-b-[2.5rem] shadow-xl shadow-emerald-100 relative overflow-hidden">
+            <div className="bg-gradient-to-br from-indigo-500 to-teal-600 text-white p-6 pt-12 rounded-b-[2.5rem] shadow-xl shadow-indigo-100 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -mr-10 -mt-10 blur-2xl"></div>
                 <div className="relative z-10">
                     <div className="flex justify-between items-start mb-6">
                         <div>
-                            <p className="text-emerald-50 text-xs mb-1 tracking-wider opacity-90">MEMBER ID: {member.id.slice(-6).toUpperCase()}</p>
+                            <p className="text-indigo-50 text-xs mb-1 tracking-wider opacity-90">MEMBER ID: {member.id.slice(-6).toUpperCase()}</p>
                             <h1 className="text-2xl font-bold tracking-tight">{member.name} 様</h1>
                         </div>
                         <div className="bg-white/20 p-2 rounded-xl backdrop-blur-md border border-white/10 shadow-sm">
@@ -64,7 +64,7 @@ export default async function MemberHomePage() {
                     <div className="flex items-center gap-2 mb-2">
                         <span className={`px-4 py-1.5 rounded-full text-xs font-bold shadow-sm backdrop-blur-sm border ${stage.name.includes("GOLD")
                                 ? "bg-amber-100/90 text-amber-900 border-amber-200"
-                                : "bg-white/90 text-emerald-900 border-emerald-100"
+                                : "bg-white/90 text-indigo-900 border-indigo-100"
                             }`}>
                             {stage.name} 会員
                         </span>
@@ -107,7 +107,7 @@ export default async function MemberHomePage() {
                 <Card className="shadow-lg shadow-slate-200/50 border-0 ring-1 ring-slate-100 rounded-2xl bg-white/80 backdrop-blur-sm">
                     <CardHeader className="pb-2 border-b border-dashed border-slate-100">
                         <CardTitle className="text-sm font-bold text-slate-500 flex items-center gap-2">
-                            <span className="w-1.5 h-4 bg-emerald-400 rounded-full"></span>
+                            <span className="w-1.5 h-4 bg-indigo-400 rounded-full"></span>
                             次回のご予約
                         </CardTitle>
                     </CardHeader>
@@ -124,9 +124,9 @@ export default async function MemberHomePage() {
                                 </div>
                                 <div className="text-right">
                                     <span className="block text-[10px] text-slate-400 mb-1">担当トレーナー</span>
-                                    <div className="inline-flex items-center gap-1 bg-emerald-50 px-2 py-1 rounded-md">
-                                        <span className="w-2 h-2 bg-emerald-500 rounded-full"></span>
-                                        <span className="font-bold text-sm text-emerald-700">{nextReservation.trainer.name}</span>
+                                    <div className="inline-flex items-center gap-1 bg-indigo-50 px-2 py-1 rounded-md">
+                                        <span className="w-2 h-2 bg-indigo-500 rounded-full"></span>
+                                        <span className="font-bold text-sm text-indigo-700">{nextReservation.trainer.name}</span>
                                     </div>
                                 </div>
                             </div>
@@ -142,7 +142,7 @@ export default async function MemberHomePage() {
                 <Card className="shadow-lg shadow-slate-200/50 border-0 ring-1 ring-slate-100 rounded-2xl overflow-hidden">
                     <CardHeader className="pb-3 bg-slate-50/50 border-b border-slate-100 flex flex-row items-center justify-between">
                         <div className="flex items-center gap-2">
-                            <Receipt className="w-5 h-5 text-emerald-600" />
+                            <Receipt className="w-5 h-5 text-indigo-600" />
                             <CardTitle className="text-base font-bold text-slate-700">今月の請求予定</CardTitle>
                         </div>
                         <span className="text-xs font-mono text-slate-400 bg-white px-2 py-1 rounded border border-slate-100">{format(new Date(), 'yyyy.MM')}</span>
@@ -166,8 +166,8 @@ export default async function MemberHomePage() {
 
                             {bill.additionalSessionFee > 0 && (
                                 <div className="py-3 border-t border-dashed border-slate-200 mt-2">
-                                    <div className="text-xs font-bold text-emerald-600 mb-2 flex items-center gap-1">
-                                        <span className="w-1 h-1 bg-emerald-600 rounded-full"></span>
+                                    <div className="text-xs font-bold text-indigo-600 mb-2 flex items-center gap-1">
+                                        <span className="w-1 h-1 bg-indigo-600 rounded-full"></span>
                                         追加利用分 (Pay As You Go)
                                     </div>
                                     {bill.details.additionalSessions.map((s, i) => (
@@ -181,7 +181,7 @@ export default async function MemberHomePage() {
 
                             <div className="flex justify-between items-center pt-4 border-t border-slate-100 mt-2">
                                 <span className="font-bold text-slate-600 text-sm">請求総額</span>
-                                <span className="font-bold text-2xl text-emerald-700 tracking-tight">
+                                <span className="font-bold text-2xl text-indigo-700 tracking-tight">
                                     ¥{bill.total.toLocaleString()}
                                 </span>
                             </div>

@@ -10,7 +10,7 @@ export default function MemberRecordPage() {
 
             <div className="p-4 space-y-4">
                 {/* Goals Card */}
-                <div className="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-xl p-5 text-white shadow-lg relative overflow-hidden">
+                <div className="bg-gradient-to-r from-indigo-500 to-teal-600 rounded-xl p-5 text-white shadow-lg relative overflow-hidden">
                     <Trophy className="absolute right-2 bottom-[-10px] w-24 h-24 text-white/10 rotate-12" />
                     <h2 className="text-sm font-bold opacity-90 mb-1">現在の目標</h2>
                     <p className="text-2xl font-bold">ベンチプレス 100kg</p>

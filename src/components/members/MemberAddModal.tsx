@@ -35,7 +35,7 @@ export function MemberAddModal({ trainers = [] }: { trainers?: Trainer[] }) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
+                <Button className="bg-indigo-600 hover:bg-indigo-700 text-white">
                     <Plus className="w-4 h-4 mr-2" /> 新規メンバー登録
                 </Button>
             </DialogTrigger>

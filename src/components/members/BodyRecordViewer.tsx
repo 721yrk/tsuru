@@ -17,7 +17,7 @@ export function BodyRecordViewer({ records }: { records: any[] }) {
         <Card className="h-full border-0 shadow-sm ring-1 ring-slate-100">
             <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-bold flex items-center gap-2 text-slate-700">
-                    <ImageIcon className="w-4 h-4 text-emerald-500" />
+                    <ImageIcon className="w-4 h-4 text-indigo-500" />
                     ビフォーアフター (Body Record)
                 </CardTitle>
             </CardHeader>
@@ -47,18 +47,18 @@ export function BodyRecordViewer({ records }: { records: any[] }) {
 
                     {/* After */}
                     <div className="flex-1">
-                        <div className="aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden relative ring-2 ring-emerald-100 shadow-lg">
+                        <div className="aspect-[3/4] bg-slate-100 rounded-lg overflow-hidden relative ring-2 ring-indigo-100 shadow-lg">
                             <img src={after.photoUrl} alt="After" className="object-cover w-full h-full" />
-                            <div className="absolute top-2 left-2 bg-emerald-600 text-white text-[10px] px-2 py-1 rounded-full shadow-sm">
+                            <div className="absolute top-2 left-2 bg-indigo-600 text-white text-[10px] px-2 py-1 rounded-full shadow-sm">
                                 {format(after.date, 'yyyy/MM')}
                             </div>
                             {after.weight && (
-                                <div className="absolute bottom-2 right-2 bg-white/90 text-emerald-800 text-[10px] font-bold px-2 py-1 rounded shadow-sm">
+                                <div className="absolute bottom-2 right-2 bg-white/90 text-indigo-800 text-[10px] font-bold px-2 py-1 rounded shadow-sm">
                                     {after.weight}kg
                                 </div>
                             )}
                         </div>
-                        <p className="text-center text-xs font-bold text-emerald-600 mt-2">AFTER</p>
+                        <p className="text-center text-xs font-bold text-indigo-600 mt-2">AFTER</p>
                     </div>
                 </div>
             </CardContent>

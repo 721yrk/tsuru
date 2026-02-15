@@ -20,7 +20,7 @@ export function PlanSettings() {
                     <h3 className="font-bold text-sm border-b pb-2 mb-4">ランク別割引率</h3>
 
                     <div className="grid grid-cols-4 items-center gap-4">
-                        <Label className="font-bold text-emerald-600">BRONZE (1年〜)</Label>
+                        <Label className="font-bold text-indigo-600">BRONZE (1年〜)</Label>
                         <div className="col-span-3 flex items-center gap-2">
                             <Input className="w-20 text-right" defaultValue="5" type="number" />
                             <span>% OFF</span>

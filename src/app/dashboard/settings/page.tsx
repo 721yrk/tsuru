@@ -161,7 +161,7 @@ export default async function SettingsPage() {
                                         <div>
                                             <div className="font-bold">{staff.name}</div>
                                             <div className="text-sm text-neutral-500">{staff.email}</div>
-                                            <div className="text-xs text-emerald-600 mt-1 font-medium">{staff.title} / ¥{staff.unitPrice.toLocaleString()}</div>
+                                            <div className="text-xs text-indigo-600 mt-1 font-medium">{staff.title} / ¥{staff.unitPrice.toLocaleString()}</div>
                                         </div>
                                         <div className="flex gap-2">
                                             {/* @ts-ignore */}

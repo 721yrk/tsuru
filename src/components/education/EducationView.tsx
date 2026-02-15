@@ -49,7 +49,7 @@ export function EducationView() {
                         <TabsTrigger
                             key={content.id}
                             value={content.id}
-                            className="font-bold data-[state=active]:bg-emerald-600 data-[state=active]:text-white transition-all"
+                            className="font-bold data-[state=active]:bg-indigo-600 data-[state=active]:text-white transition-all"
                         >
                             {content.title}
                         </TabsTrigger>

@@ -10,7 +10,7 @@ import { MEMBER_PLANS } from "@/lib/constants"
 import { updateMemberSettings } from "@/app/actions/members_actions"
 
 const PLAN_OPTIONS = [
-    { value: MEMBER_PLANS.STANDARD.id, label: MEMBER_PLANS.STANDARD.label, color: "bg-emerald-100 text-emerald-700" },
+    { value: MEMBER_PLANS.STANDARD.id, label: MEMBER_PLANS.STANDARD.label, color: "bg-indigo-100 text-indigo-700" },
     { value: MEMBER_PLANS.PREMIUM.id, label: MEMBER_PLANS.PREMIUM.label, color: "bg-indigo-100 text-indigo-700" },
     { value: MEMBER_PLANS.DIGITAL_PREPAID.id, label: MEMBER_PLANS.DIGITAL_PREPAID.label, color: "bg-blue-100 text-blue-700" },
     { value: MEMBER_PLANS.TICKET.id, label: MEMBER_PLANS.TICKET.label, color: "bg-amber-100 text-amber-700" },
@@ -76,7 +76,7 @@ export function MemberSettingsCard({ member, trainers = [] }: { member: any, tra
                         <Button variant="ghost" size="icon" className="h-6 w-6 text-red-500" onClick={handleCancel} disabled={isSaving}>
                             <X className="w-3 h-3" />
                         </Button>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 text-emerald-500" onClick={handleSave} disabled={isSaving}>
+                        <Button variant="ghost" size="icon" className="h-6 w-6 text-indigo-500" onClick={handleSave} disabled={isSaving}>
                             <Save className="w-3 h-3" />
                         </Button>
                     </div>
@@ -126,7 +126,7 @@ export function MemberSettingsCard({ member, trainers = [] }: { member: any, tra
                                 </Select>
                             ) : (
                                 <div className="text-sm font-medium text-slate-800 flex items-center gap-2">
-                                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                                    <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
                                     {member.mainTrainer?.name || "未割当"}
                                 </div>
                             )}

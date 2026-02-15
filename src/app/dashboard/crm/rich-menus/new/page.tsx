@@ -114,7 +114,7 @@ export default function NewRichMenuPage() {
                         <div className="bg-slate-100 rounded-lg p-6 flex flex-col items-center justify-center text-center space-y-4 border border-dashed border-slate-300">
                             <div className="w-full max-w-md aspect-[2/1] bg-white border border-slate-200 rounded flex relative overflow-hidden">
                                 {/* Visual Mock of the menu based on selection */}
-                                <div className="w-1/2 h-full border-r border-slate-100 flex items-center justify-center bg-emerald-50 text-emerald-700 font-bold">
+                                <div className="w-1/2 h-full border-r border-slate-100 flex items-center justify-center bg-indigo-50 text-indigo-700 font-bold">
                                     予約する
                                 </div>
                                 <div className="w-1/2 h-full flex items-center justify-center text-slate-500">
@@ -140,7 +140,7 @@ export default function NewRichMenuPage() {
 
             <div className="flex justify-end gap-4">
                 <Button variant="outline" onClick={() => router.back()}>キャンセル</Button>
-                <Button onClick={handleCreate} disabled={isLoading || !name} className="bg-emerald-600 hover:bg-emerald-700">
+                <Button onClick={handleCreate} disabled={isLoading || !name} className="bg-indigo-600 hover:bg-indigo-700">
                     {isLoading ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                     保存して作成
                 </Button>

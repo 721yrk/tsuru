@@ -33,7 +33,7 @@ export default async function MemberSettingsPage() {
             <div className="space-y-6">
                 {/* Profile Card */}
                 <div className="flex items-center gap-4 p-4 bg-white rounded-2xl shadow-sm border border-slate-100">
-                    <div className="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-600">
+                    <div className="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600">
                         <User className="w-6 h-6" />
                     </div>
                     <div>

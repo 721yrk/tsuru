@@ -1,7 +1,6 @@
 
 "use client"
 
-import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
@@ -13,7 +12,7 @@ import {
     MessageCircle,
     BookOpen,
     BarChart3,
-    ChevronDown
+    ChevronLeft
 } from "lucide-react"
 import Image from "next/image"
 import UnreadBadge from "@/components/crm/UnreadBadge"
@@ -45,53 +44,40 @@ const sections = [
     },
 ]
 
-export const Sidebar = () => {
+export const Sidebar = ({ onClose }: { onClose?: () => void }) => {
     const pathname = usePathname()
-    const [openSections, setOpenSections] = useState<Record<string, boolean>>({
-        Store: true,
-        CRM: true,
-        Management: true,
-    })
-
-    const toggleSection = (label: string) => {
-        setOpenSections((prev) => ({ ...prev, [label]: !prev[label] }))
-    }
 
     return (
         <div className="py-3 flex flex-col h-full bg-white border-r border-slate-100 text-slate-600 shadow-sm">
             <div className="px-3 flex-1 overflow-y-auto">
-                <Link href="/dashboard" className="flex justify-center mb-6">
-                    <div className="relative w-14 h-14">
-                        <Image
-                            src="/tsuru_logo.png"
-                            alt="TSURU Logo"
-                            fill
-                            className="object-contain"
-                        />
-                    </div>
-                </Link>
+                <div className="flex items-center justify-between mb-6">
+                    <Link href="/dashboard" className="flex-1 flex justify-center">
+                        <div className="relative w-14 h-14">
+                            <Image
+                                src="/tsuru_logo.png"
+                                alt="TSURU Logo"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
+                    </Link>
+                    {onClose && (
+                        <button
+                            onClick={onClose}
+                            className="p-1 rounded-md hover:bg-slate-100 transition-colors text-slate-400 hover:text-slate-600"
+                        >
+                            <ChevronLeft className="h-4 w-4" />
+                        </button>
+                    )}
+                </div>
 
                 <div className="space-y-3">
                     {sections.map((section) => (
                         <div key={section.label}>
-                            <button
-                                onClick={() => toggleSection(section.label)}
-                                className="flex items-center justify-between w-full px-2 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider hover:text-slate-600 transition-colors"
-                            >
+                            <p className="px-2 py-1.5 text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
                                 {section.label}
-                                <ChevronDown
-                                    className={cn(
-                                        "h-3 w-3 transition-transform duration-200",
-                                        openSections[section.label] ? "" : "-rotate-90"
-                                    )}
-                                />
-                            </button>
-                            <div
-                                className={cn(
-                                    "space-y-0.5 overflow-hidden transition-all duration-200",
-                                    openSections[section.label] ? "max-h-96 opacity-100" : "max-h-0 opacity-0"
-                                )}
-                            >
+                            </p>
+                            <div className="space-y-0.5">
                                 {section.routes.map((route) => (
                                     <Link
                                         key={route.href}

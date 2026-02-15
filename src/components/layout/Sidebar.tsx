@@ -70,21 +70,16 @@ export const Sidebar = () => {
 
     return (
         <div className="space-y-4 py-4 flex flex-col h-full bg-white border-r border-slate-100 text-slate-600 shadow-sm">
-            <div className="px-6 py-4 flex-1">
-                <Link href="/dashboard" className="flex flex-col mb-10 pl-2">
-                    <div className="flex items-center gap-2 mb-1">
-                        <div className="relative w-12 h-12">
-                            <Image
-                                src="/tsuru_logo.png"
-                                alt="TSURU Logo"
-                                fill
-                                className="object-contain"
-                            />
-                        </div>
+            <div className="px-4 py-4 flex-1">
+                <Link href="/dashboard" className="flex justify-center mb-8">
+                    <div className="relative w-16 h-16">
+                        <Image
+                            src="/tsuru_logo.png"
+                            alt="TSURU Logo"
+                            fill
+                            className="object-contain"
+                        />
                     </div>
-                    <p className="text-[10px] text-slate-400 font-medium tracking-wide">
-                        Powered by 幸せをカタチにする株式会社
-                    </p>
                 </Link>
 
                 <div className="space-y-6">

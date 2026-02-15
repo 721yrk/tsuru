@@ -1,4 +1,4 @@
-# SHEEKA - Wellness Space Platform
+# TSURU - Wellness Space Platform
 
 ## Getting Started
 

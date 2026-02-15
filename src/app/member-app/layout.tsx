@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Home, Calendar, NotebookPen, User } from 'lucide-react'
 
 export const metadata = {
-    title: 'SHEEKA Member',
+    title: 'TSURU Member',
     description: 'Member Portal',
 }
 

@@ -35,7 +35,7 @@ async function main() {
             lineDisplayName: profile.displayName,
             linePictureUrl: profile.pictureUrl,
             isLineFriend: true,
-            email: `line_${dummyLineId}@sheeka.local`,
+            email: `line_${dummyLineId}@TSURU.local`,
             passwordHash: 'dummy',
             role: 'MEMBER',
             memberProfile: {

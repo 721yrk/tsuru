@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
                                 lineDisplayName: profile.displayName,
                                 linePictureUrl: profile.pictureUrl,
                                 isLineFriend: true,
-                                email: `line_${lineUserId}@sheeka.local`, // Placeholder unique email
+                                email: `line_${lineUserId}@TSURU.local`, // Placeholder unique email
                                 passwordHash: '$2a$12$DummyHashForLineUser_______________________', // Unusable hash
                                 role: 'MEMBER',
                                 memberProfile: {
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
 
                         await client.replyMessage(event.replyToken, {
                             type: 'text',
-                            text: '友だち追加ありがとうございます！\nSHEEKA Wellnessへようこそ。'
+                            text: '友だち追加ありがとうございます！\nTSURU Wellnessへようこそ。'
                         });
                     } catch (e) {
                         console.error('Error handling follow event:', e);
@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
                                         lineDisplayName: profile.displayName,
                                         linePictureUrl: profile.pictureUrl,
                                         isLineFriend: true,
-                                        email: `line_${lineUserId}@sheeka.local`,
+                                        email: `line_${lineUserId}@TSURU.local`,
                                         passwordHash: '$2a$12$DummyHashForLineUser_______________________',
                                         role: 'MEMBER',
                                         memberProfile: {

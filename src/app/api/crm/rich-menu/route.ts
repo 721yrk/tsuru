@@ -14,7 +14,7 @@ export async function POST(req: NextRequest) {
 
         // Dynamic URL based on environment would be better, but hardcoding prod/vercel url for now or relative
         // LINE requires Absolute URLs.
-        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://sheeka-wellness.vercel.app"
+        const baseUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "https://TSURU-wellness.vercel.app"
 
         const richMenuObject: RichMenu = {
             size: {

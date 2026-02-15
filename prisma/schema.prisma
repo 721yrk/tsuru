@@ -1,4 +1,4 @@
-// SHEEKA - Database Schema
+// TSURU - Database Schema
 
 generator client {
   provider = "prisma-client-js"

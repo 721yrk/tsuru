@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SHEEKA Wellness",
+  title: "TSURU Wellness",
   description: "幸せを、構造でつくる",
 };
 

@@ -75,7 +75,7 @@ export const Sidebar = () => {
                     <div className="flex items-center gap-2 mb-1">
                         <Leaf className="w-6 h-6 text-emerald-600" />
                         <h1 className="text-2xl font-serif text-slate-800 tracking-tight">
-                            SHEEKA
+                            TSURU
                         </h1>
                     </div>
                     <p className="text-[10px] text-slate-400 font-medium tracking-wide">
@@ -161,7 +161,7 @@ export const Sidebar = () => {
 
             <div className="px-6 py-4 border-t border-slate-50">
                 <div className="text-xs text-slate-400 text-center">
-                    &copy; 2026 SHEEKA Platform
+                    &copy; 2026 TSURU Platform
                 </div>
             </div>
         </div>

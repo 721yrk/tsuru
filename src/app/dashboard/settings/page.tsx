@@ -110,7 +110,7 @@ export default async function SettingsPage() {
                         <CardContent className="space-y-4">
                             <div className="space-y-1">
                                 <Label htmlFor="name">店舗名（アプリ表示名）</Label>
-                                <Input id="name" defaultValue="wellness space CLOVER." />
+                                <Input id="name" defaultValue="TSURU Wellness" />
                             </div>
                             <div className="space-y-1">
                                 <Label htmlFor="phone">代表電話番号</Label>

@@ -10,11 +10,11 @@ import {
     Users,
     Mic,
     Settings,
-    Leaf,
     MessageCircle,
     BookOpen,
     BarChart3
 } from "lucide-react"
+import Image from "next/image"
 import UnreadBadge from "@/components/crm/UnreadBadge"
 
 const routes = [
@@ -73,13 +73,20 @@ export const Sidebar = () => {
             <div className="px-6 py-4 flex-1">
                 <Link href="/dashboard" className="flex flex-col mb-10 pl-2">
                     <div className="flex items-center gap-2 mb-1">
-                        <Leaf className="w-6 h-6 text-emerald-600" />
+                        <div className="relative w-8 h-8">
+                            <Image
+                                src="/tsuru_logo.png"
+                                alt="TSURU Logo"
+                                fill
+                                className="object-contain"
+                            />
+                        </div>
                         <h1 className="text-2xl font-serif text-slate-800 tracking-tight">
                             TSURU
                         </h1>
                     </div>
                     <p className="text-[10px] text-slate-400 font-medium tracking-wide">
-                        Powered by wellness space CLOVER.
+                        Powered by 幸せをカタチにする株式会社
                     </p>
                 </Link>
 

@@ -10,6 +10,10 @@ export async function updateMemberProfile(formData: FormData) {
     const gender = formData.get('gender') as string
     const dateOfBirth = formData.get('dateOfBirth') as string
     const joinDate = formData.get('joinDate') as string
+    const height = formData.get('height') ? parseFloat(formData.get('height') as string) : null
+    const medicalHistory = formData.get('medicalHistory') as string
+    const exerciseHistory = formData.get('exerciseHistory') as string
+    const currentCondition = formData.get('currentCondition') as string
 
     console.log(`[updateMemberProfile] userId: ${userId}`) // Debug log
 
@@ -36,6 +40,10 @@ export async function updateMemberProfile(formData: FormData) {
                 gender,
                 dateOfBirth: dateOfBirth ? new Date(dateOfBirth) : undefined,
                 joinDate: joinDate ? new Date(joinDate) : undefined,
+                height,
+                medicalHistory,
+                exerciseHistory,
+                currentCondition,
             },
             create: {
                 userId,
@@ -46,6 +54,10 @@ export async function updateMemberProfile(formData: FormData) {
                 joinDate: joinDate ? new Date(joinDate) : new Date(),
                 phone: '', // Required field fallback
                 emergencyContact: '', // Required field fallback
+                height,
+                medicalHistory,
+                exerciseHistory,
+                currentCondition,
             }
         })
 

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { Textarea } from "@/components/ui/textarea"
 import {
     Select,
     SelectContent,
@@ -20,6 +21,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select"
+
 import { updateMemberProfile } from "@/app/actions/member_profile_actions" // Action to create
 import { useRouter } from "next/navigation"
 import { Pencil } from "lucide-react"
@@ -39,6 +41,10 @@ export default function ProfileEditModal({ member }: ProfileEditModalProps) {
         gender: member.memberProfile?.gender || "UNKNOWN",
         dateOfBirth: member.memberProfile?.dateOfBirth ? new Date(member.memberProfile.dateOfBirth).toISOString().split('T')[0] : "",
         joinDate: member.memberProfile?.joinDate ? new Date(member.memberProfile.joinDate).toISOString().split('T')[0] : "",
+        height: member.height?.toString() || "",
+        medicalHistory: member.medicalHistory || "",
+        exerciseHistory: member.exerciseHistory || "",
+        currentCondition: member.currentCondition || "",
     })
 
     // Reset form when modal opens to ensure fresh data
@@ -50,6 +56,10 @@ export default function ProfileEditModal({ member }: ProfileEditModalProps) {
                 gender: member.memberProfile?.gender || "UNKNOWN",
                 dateOfBirth: member.memberProfile?.dateOfBirth ? new Date(member.memberProfile.dateOfBirth).toISOString().split('T')[0] : "",
                 joinDate: member.memberProfile?.joinDate ? new Date(member.memberProfile.joinDate).toISOString().split('T')[0] : "",
+                height: member.height?.toString() || "",
+                medicalHistory: member.medicalHistory || "",
+                exerciseHistory: member.exerciseHistory || "",
+                currentCondition: member.currentCondition || "",
             })
         }
     }, [open, member])
@@ -66,6 +76,10 @@ export default function ProfileEditModal({ member }: ProfileEditModalProps) {
             formDataToSend.append('gender', formData.gender)
             formDataToSend.append('dateOfBirth', formData.dateOfBirth)
             formDataToSend.append('joinDate', formData.joinDate)
+            formDataToSend.append('height', formData.height)
+            formDataToSend.append('medicalHistory', formData.medicalHistory)
+            formDataToSend.append('exerciseHistory', formData.exerciseHistory)
+            formDataToSend.append('currentCondition', formData.currentCondition)
 
             const result = await updateMemberProfile(formDataToSend)
 
@@ -86,9 +100,7 @@ export default function ProfileEditModal({ member }: ProfileEditModalProps) {
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
-                <Button variant="ghost" size="sm">
-                    <Pencil className="w-3 h-3 mr-1" />
-                    編集
+                <Button variant="ghost" size="icon" className="h-6 w-6 text-slate-400">
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]">
@@ -161,6 +173,55 @@ export default function ProfileEditModal({ member }: ProfileEditModalProps) {
                             value={formData.joinDate}
                             onChange={(e) => setFormData({ ...formData, joinDate: e.target.value })}
                             className="col-span-3"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="height" className="text-right">
+                            身長 (cm)
+                        </Label>
+                        <Input
+                            id="height"
+                            type="number"
+                            value={formData.height}
+                            onChange={(e) => setFormData({ ...formData, height: e.target.value })}
+                            className="col-span-3"
+                            placeholder="160"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 gap-4">
+                        <Label htmlFor="medicalHistory" className="text-right pt-2">
+                            既往歴
+                        </Label>
+                        <Textarea
+                            id="medicalHistory"
+                            value={formData.medicalHistory}
+                            onChange={(e) => setFormData({ ...formData, medicalHistory: e.target.value })}
+                            className="col-span-3 min-h-[60px]"
+                            placeholder="既往歴 (怪我、病気など)"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 gap-4">
+                        <Label htmlFor="exerciseHistory" className="text-right pt-2">
+                            運動歴
+                        </Label>
+                        <Textarea
+                            id="exerciseHistory"
+                            value={formData.exerciseHistory}
+                            onChange={(e) => setFormData({ ...formData, exerciseHistory: e.target.value })}
+                            className="col-span-3 min-h-[60px]"
+                            placeholder="運動歴 (スポーツ経験など)"
+                        />
+                    </div>
+                    <div className="grid grid-cols-4 gap-4">
+                        <Label htmlFor="currentCondition" className="text-right pt-2">
+                            現在の状態
+                        </Label>
+                        <Textarea
+                            id="currentCondition"
+                            value={formData.currentCondition}
+                            onChange={(e) => setFormData({ ...formData, currentCondition: e.target.value })}
+                            className="col-span-3 min-h-[60px]"
+                            placeholder="現在の怪我や病気の状態"
                         />
                     </div>
                 </div>
